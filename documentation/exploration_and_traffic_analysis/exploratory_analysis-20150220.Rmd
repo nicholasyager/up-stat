@@ -1,0 +1,203 @@
+---
+title: "Exploratory Analysis"
+author: "Nicholas A. Yager"
+date: "2015-02-20"
+output: html_document
+---
+
+## Introduction
+
+For the UP-Stat data competition we are tasked to
+
+> discover the most compelling, appealing and practical patterns in the episodes 
+> of traffic congestion. The merits will be measured in terms of novelty of the 
+> patterns discovered, usability of the recommendations made, and originality of
+> the scientific methods used.
+
+With that in mind, we need to know what we are working with. Our data have 5
+variables:
+
+- **Volume (vehicles/hour)**: the number of vehicles per hour going by the 
+location. It is computed as twelve times the actual volume measured over 
+five minutes. **This is also known as the flow, or flow rate.**
+- **Speed **(miles/hour)**: calculated from the difference in time between the 
+beginning and ending of vehicle detection.  It is the average over all 
+estimated speeds of detected vehicles within a five-minute window.
+- **Delay (seconds)**: Estimate of how long vehicles wait between arrival at and
+departure from the intersection.
+- **Stops** (vehicles/hour) count how many vehicles are approaching a red light.
+*It approximates the length of the queue when the light is red.*
+- **DateTime**: Time coordinate of the data in the POSIX format "%m/%d/%y %H:%M".
+
+## Data Handling
+
+Loading the data is trivial with the exception of the date data. Dates should be
+converted from a string into a Date object for easy subsetting.
+```{r}
+# Read the data ----------------------------------------------------------------
+traffic <- read.csv("../../data/UrbanAnalytics2015.csv", sep=" ")
+traffic <- traffic[2:6]
+
+## Parse the datetime as a Date object.
+traffic$DateTime <- strptime(traffic$DateTime, "%m/%d/%y %H:%M")
+```
+
+Let's begin with examining the distributions for each variable.
+```{r, echo=TRUE}
+# We can exclude the date
+boxplot(traffic[1:4],
+        main="Distribution of Data by Type",
+        ylab="Value",
+        xlab="Data Type")
+```
+
+Right from the get-go, it looks like there are some extreme outliers in the data.
+For the sake of statistical consistency, we can replace the rows with absurd 
+outliers with NAs. For this rough exploration, let's say any value greater than
+5000 in an outlier.
+```{r,echo=TRUE}
+outliers.delay <- which(traffic$Delay > 5000)
+traffic$Delay[outliers.delay] <- NA
+
+outliers.stops <- which(traffic$Stops > 5000)
+traffic$Stops[outliers.stops] <- NA
+```
+
+Now, let's reexamine the distributions for our data.
+```{r, echo=TRUE}
+# We can exclude the date
+boxplot(traffic[1:4],
+        main="Corrected Distribution of Data by Type",
+        ylab="Value",
+        xlab="Data Type")
+```
+
+Still odd, but not totally absurd. It looks like the Stops rate is very unevenly
+distributed, with observations over 1000 vehicles stopped per hour, which doesn't
+seem right at face value. Of particular note is Speed, which has a consistent
+spread within typical legal ranges.
+
+Let's graph a pairing plot of each variable for one week, for instance.
+
+```{r, echo=TRUE}
+daysToSteps <- function(days){
+    return(days * (1440/5))
+    }
+plot(traffic[1:daysToSteps(7),])
+```
+
+Since we are interested in traffic congestion, it may be prudent to examine the
+delay times more in depth. This plot shows one week, Sunday through Saturday, from
+October, 2013. On most week days, the delay time increases as the day moves forward
+until characteristic rush hour times at which point the delay periods skyrocket.
+The one major exception to this is the Friday in this examples, which sees a sudden
+peak around 20:00.
+```{r, echo=FALSE}
+# Load libraries
+require(ggplot2)
+require(reshape2)
+```
+
+```{r, echo=TRUE}
+ggplot(traffic[1:daysToSteps(7),], aes(x=DateTime,y=Delay))+
+    geom_line() +
+    labs(title = "Traffic Delay for One Week") +
+    xlab("Date") +
+    ylab("Delay (Seconds)")+
+    theme_bw()
+```
+
+It may be useful to examine a detrended plot of delay, allowing for observing the
+overall changes in delay over time. In a detrended analysis, it's easier to see
+the exact moments of large traffic influx. It may also be useful to perform a
+Fourier transformation to locate dominant frequencies in the delays.
+
+```{r, echo=TRUE}
+diffs <- diff(traffic$Delay[1:daysToSteps(7)])
+detrendedData <- data.frame(Delay <- diffs, Date = traffic$DateTime[1:(daysToSteps(7)-1)])
+ggplot(detrendedData, aes(x=Date, y=Delay))+
+    geom_line() +
+    labs(title = "Detrended Traffic Delay for One Week") +
+    xlab("Date") +
+    ylab("Change in Delay (Seconds)")+
+    theme_bw()
+```
+
+It seems like the most common times for delay are approximately the same time of
+day. This shows the aggregation of week day over the entire data set, with time
+increasing on the y-axis. The colors represent the average delay, with red having the
+least delay, and magenta having the most delay.
+
+```{r, echo=TRUE}
+# Aggregate averages over a day
+stepsPerDay = daysToSteps(1)
+dailyDelays <- matrix(0, nrow=7, ncol=stepsPerDay-1)
+dailyCounts <- matrix(0, nrow=7, ncol=stepsPerDay-1)
+for (index in 1:nrow(traffic)) {
+    wDay = 1 + traffic$DateTime[index]$wday
+    minute = (traffic$DateTime[index]$min + (traffic$DateTime[index]$hour * 60)) / 5
+    if (! is.na(traffic$Delay[index])){
+        dailyDelays[wDay, minute] = dailyDelays[wDay, minute] + traffic$Delay[index]
+        dailyCounts[wDay, minute] = dailyCounts[wDay, minute] + 1
+        }
+    }
+
+dailyDelays = dailyDelays / dailyCounts
+dayList<-c("Sun.","Mon.","Tues.","Wed.","Thurs.","Fri.","Sat.")
+
+ggplot(melt(dailyDelays), aes(Var1,Var2, fill=value)) +
+    scale_fill_gradientn(colours=rainbow(50), name="Delay\n(Seconds)")+
+    xlab("Day of the Week")+
+    ylab("Time (Hours)")+
+    geom_raster() +
+    theme( panel.background = element_rect(fill = "transparent", colour = NA),
+           panel.grid.minor = element_blank(),
+           panel.grid.major = element_blank()) +
+    scale_y_discrete(breaks = seq(1, 288, 12), labels = seq(0,23,1)) +
+    scale_x_discrete(breaks=c("1","2","3","4","5","6","7"), labels=dayList, 
+                     limits=c(1,2,3,4,5,6,7))
+```
+
+And here is a colorblind friendly version, in which blue is low delay and orange
+is high delay.
+
+```{r, echo=TRUE}
+ggplot(melt(dailyDelays), aes(Var1,Var2, fill=value)) +
+    scale_fill_gradientn(colours=c("blue","white","orange"),name="Delay\n(Seconds)")+
+    xlab("Day of the Week")+
+    ylab("Time (Hours)")+
+    geom_raster() +
+    theme( panel.background = element_rect(fill = "transparent", colour = NA),
+           panel.grid.minor = element_blank(),
+           panel.grid.major = element_blank()) +
+    scale_y_discrete(breaks = seq(1, 288, 12), labels = seq(0,23,1)) +
+    scale_x_discrete(breaks=c("1","2","3","4","5","6","7"), labels=dayList, 
+                     limits=c(1,2,3,4,5,6,7))
+```
+
+Based on the work of Flynn _et al._, you can quntify the critical density (vehicles/mile)
+for a traffic flow by comparing the relative density (density/maximum density) to
+the flow of the traffic. When traffic is below the critical density, if can flow
+around the traffic free flow rate determined by the road. When the density passes
+the critical value, the traffic breaks down into waves of congestion. As a result,
+the resulting traffic patterns flow with the wave flow rate, which is typically
+lower than the free flow rate.
+
+```{r, echo=TRUE}
+# Density is described as q/v, where q is flow rate (volume), and v is average
+# velocity
+density = traffic$Volume/traffic$Speed
+
+# Trim out non-finite values
+density[which(!is.finite(density))]=NA
+
+density.data <- data.frame(Density = density, Flow = traffic$Volume,relativeDensity=density/max(density,na.rm=T))
+
+# Density and flow -------------------------------------------------------------
+# There is a non-linear relationship between the flow vs the density.
+ggplot(density.data, aes(relativeDensity, Flow)) +
+    geom_point() +
+    xlab("Density (Vehicles/Mile)")+
+    ylab("Time (Vehicles/Hour)")
+
+```
