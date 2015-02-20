@@ -36,7 +36,6 @@ converted from a string into a Date object for easy subsetting.
 ```{r}
 # Read the data ----------------------------------------------------------------
 traffic <- read.csv("../../data/UrbanAnalytics2015.csv", sep=" ")
-traffic <- traffic[2:6]
 
 ## Parse the datetime as a Date object.
 traffic$DateTime <- strptime(traffic$DateTime, "%m/%d/%y %H:%M")
@@ -193,11 +192,18 @@ density[which(!is.finite(density))]=NA
 
 density.data <- data.frame(Density = density, Flow = traffic$Volume,relativeDensity=density/max(density,na.rm=T))
 
+# Critical Density
+Kc = density[which(traffic$Volume == max(traffic$Volume))] / max(density, na.rm=T)
+
 # Density and flow -------------------------------------------------------------
 # There is a non-linear relationship between the flow vs the density.
 ggplot(density.data, aes(relativeDensity, Flow)) +
     geom_point() +
     xlab("Density (Vehicles/Mile)")+
-    ylab("Time (Vehicles/Hour)")
-
+    ylab("Time (Vehicles/Hour)") +
+    theme_bw()
 ```
+
+This is known as the fundamental diagram in traffic analysis, and can be used to
+detmermine at what speeds the traffice experiences free flow, unstable flow,
+traffic waves, and congestion.
