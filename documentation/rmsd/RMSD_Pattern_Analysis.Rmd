@@ -29,6 +29,10 @@ converted from a string into a Date object for easy subsetting.
 # Read the data ----------------------------------------------------------------
 traffic <- read.csv("../../data/UrbanAnalytics2015.csv", sep=" ")
 
+# Remove outliers
+traffic[which(traffic$Delay > 5000),1:4] = c(NA,NA,NA,NA)
+traffic[which(traffic$Stops > 5000),1:4] = c(NA,NA,NA,NA)
+
 ## Parse the datetime as a Date object.
 traffic$DateTime <- strptime(traffic$DateTime, "%m/%d/%y %H:%M")
 
@@ -37,7 +41,7 @@ dayList<-c("Sun.","Mon.","Tues.","Wed.","Thurs.","Fri.","Sat.")
 ```
 
 Let's define a function that will calculate the RMSD for us. This function must
-accept two vectors of equal length, and it must also be able to tolerate NA v
+accept two vectors of equal length, and it must also be able to tolerate NA
 values in the data.
 ```{r, echo=TRUE}
 rmsd <- function(vector1, vector2) {
@@ -128,5 +132,57 @@ will the following day since it is not no longer as abnormal. It would appear
 that the Sunday, Thursday, and Friday on the 6th week, the Tuesday, Wednesday, 
 and Thursday on the 10th week, the Wednesday, Friday, and Saturday on the 20th
 week, and the Monday on the 32nd week.
+
+# Comparisions to the first week
+
+We can also calculate the RMSDs with respect to the first week only.
+
+```{r, echo=TRUE}
+days <- traffic$DateTime[nrow(traffic)]$yday + 356 - traffic$DateTime[1]$yday
+weeks = floor(days/7)
+rmsds <- matrix(0, nrow=weeks-1, ncol=7)
+for (wday in 0:6) {
+
+  ## For each weekday, compile a matrix of every week's version and compare
+  weeklySubset = traffic[which(traffic$DateTime$wday == wday),]
+  weeklyMatrix <- matrix(NA,ncol=288, nrow=weeks)
+  for (index in 1:nrow(weeklySubset)) {
+    dayNumber = 1+  weeklySubset$DateTime[index]$yday + 356 *(weeklySubset$DateTime[index]$year - 113)  - weeklySubset$DateTime[1]$yday
+    week = 1 + floor(dayNumber/7)
+    minute = 1 + (weeklySubset$DateTime[index]$min + (60*weeklySubset$DateTime[index]$hour))/5
+
+    weeklyMatrix[week, minute] = weeklySubset$Volume[index]
+  }
+  for (week in 1:(weeks-1)) {
+    rmsds[week, wday+1] <- rmsd(weeklyMatrix[1,],weeklyMatrix[week + 1,])
+  }
+}
+```
+
+In doing so, we are able to decrease the RMSD echos seen above while seeing the
+same general results.
+
+```{r,echo=TRUE}
+## Simple Plotting -------------------------------------------------------------
+matplot(rmsds,type="l",
+        lty=1,lwd=2,col=rainbow(7))
+legend("topleft",legend=dayList,fill=rainbow(7),
+       cex=0.75)
+```
+```{r, echo=TRUE}
+## Plotting --------------------------------------------------------------------
+library(ggplot2)
+library(reshape2)
+ggplot(melt(rmsds), aes(Var1,Var2, fill=value)) +
+  scale_fill_gradientn(colours=c("white","blue","orange"))+
+  xlab("Week")+
+  ylab("Day")+
+  geom_raster() +
+  theme( panel.background = element_rect(fill = "transparent", colour = NA),
+         panel.grid.minor = element_blank(),
+         panel.grid.major = element_blank()) +
+  scale_x_discrete(breaks = seq(1, 31, 1), labels = seq(2,32,1))+
+  scale_y_discrete(breaks=c("1","2","3","4","5","6","7"), labels=dayList, limits=c(1,2,3,4,5,6,7))
+```
 
 [rmsd]:https://en.wikipedia.org/wiki/Root-mean-square_deviation

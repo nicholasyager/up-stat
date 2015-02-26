@@ -52,7 +52,7 @@ for (wday in 0:6) {
 
   }
   for (week in 1:(weeks-1)) {
-    rmsds[week, wday+1] <- rmsd(weeklyMatrix[week,],weeklyMatrix[week + 1,])
+    rmsds[week, wday+1] <- rmsd(weeklyMatrix[1,],weeklyMatrix[week + 1,])
   }
 }
 
@@ -66,18 +66,6 @@ legend("topleft",legend=dayList,fill=rainbow(7),
 
 require(ggplot2)
 require(reshape2)
-
-ggplot(melt(rmsds), aes(Var1,Var2, fill=value)) +
-  scale_fill_gradientn(colours=rainbow(50))+
-  xlab("Week")+
-  ylab("Day")+
-  geom_raster() +
-  theme( panel.background = element_rect(fill = "transparent", colour = NA),
-         panel.grid.minor = element_blank(),
-         panel.grid.major = element_blank()) +
-  scale_x_discrete(breaks = seq(1, 31, 1), labels = seq(2,32,1))+
-  scale_y_discrete(breaks=c("1","2","3","4","5","6","7"), labels=dayList, limits=c(1,2,3,4,5,6,7))
-
 ggplot(melt(rmsds), aes(Var1,Var2, fill=value)) +
   scale_fill_gradientn(colours=c("white","blue","orange"))+
   xlab("Week")+
