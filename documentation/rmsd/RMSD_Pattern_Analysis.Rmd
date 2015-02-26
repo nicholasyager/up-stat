@@ -165,7 +165,7 @@ same general results.
 ```{r,echo=TRUE}
 ## Simple Plotting -------------------------------------------------------------
 matplot(rmsds,type="l",
-        lty=1,lwd=2,col=rainbow(7))
+        lty=1,lwd=2,col=rainbow(7), ylab="RMSD",xlab="Week")
 legend("topleft",legend=dayList,fill=rainbow(7),
        cex=0.75)
 ```
@@ -174,7 +174,7 @@ legend("topleft",legend=dayList,fill=rainbow(7),
 library(ggplot2)
 library(reshape2)
 ggplot(melt(rmsds), aes(Var1,Var2, fill=value)) +
-  scale_fill_gradientn(colours=c("white","blue","orange"))+
+  scale_fill_gradientn(colours=c("white","blue","orange"), name="RMSD")+
   xlab("Week")+
   ylab("Day")+
   geom_raster() +
