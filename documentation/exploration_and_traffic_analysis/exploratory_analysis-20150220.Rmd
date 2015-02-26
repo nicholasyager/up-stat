@@ -207,3 +207,25 @@ ggplot(density.data, aes(relativeDensity, Flow)) +
 This is known as the fundamental diagram in traffic analysis, and can be used to
 detmermine at what speeds the traffice experiences free flow, unstable flow,
 traffic waves, and congestion.
+
+```{r, echo=TRUE}
+# Density is described as q/v, where q is flow rate (volume), and v is average
+# velocity
+density = traffic$Volume/traffic$Speed
+
+# Trim out non-finite values
+density[which(!is.finite(density))]=NA
+
+density.data <- data.frame(Density = density, Flow = traffic$Volume,
+                           relativeDensity=density/max(density,na.rm=T),
+                           Speed = traffic$Speed, Date = traffic$DateTime)
+
+
+# Density and flow -------------------------------------------------------------
+# There is a non-linear relationship between the flow vs the density.
+ggplot(density.data, aes(x=Flow,y=Speed,z=Date)) +
+    geom_point() +
+    ylab("Speed (Mile/Hour)")+
+    xlab("Flow (Vehicals/Hour)") +
+    theme_bw()
+```
