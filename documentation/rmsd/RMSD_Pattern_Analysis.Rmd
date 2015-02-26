@@ -47,6 +47,8 @@ rmsd <- function(vector1, vector2) {
 }
 ```
 
+## Templating
+
 First, we need to set some initial templates to compare our data against. To do
 this, I am making a list of vectors, with each element of the list holding the 
 traffic volume for that day. I will fill the templates with the first week of
@@ -61,12 +63,14 @@ for (day in 1:7) {
 }
 ```
 
+## Data agregation
+
 Now, we need to generate vectors to process with our RMSD function. Sadly, the 
 original data contain gaps, outliers, and general nasties. What we will do, is
 for each day of the week will step week-by-week filling in a matrix of each 5
 minute period. After we fill in the matrix for a particular week day, we can
 calculate the RMSD with respect to the previous week. The function is slower than
-other huristic methods, but it does not fall prey to missing data problems that
+other heuristic methods, but it does not fall prey to missing data problems that
 can be experienced other ways.
 ```{r, echo=T}
 days <- traffic$DateTime[nrow(traffic)]$yday + 356 - traffic$DateTime[1]$yday
@@ -89,7 +93,9 @@ for (wday in 0:6) {
 }
 ```
 
-The `rmsds` matrix returned can be visualized either as a timeseries, which is a
+## Plotting
+
+The `rmsds` matrix returned can be visualized either as a time series, which is a
 little too messy for my taste
 
 ```{r, echo=TRUE}
@@ -117,7 +123,7 @@ ggplot(melt(rmsds), aes(Var1,Var2, fill=value)) +
 
 ```
 
-It is important to note that one abnormal day will be noticed asa high RMSD as 
+It is important to note that one abnormal day will be noticed as a high RMSD as 
 will the following day since it is not no longer as abnormal. It would appear 
 that the Sunday, Thursday, and Friday on the 6th week, the Tuesday, Wednesday, 
 and Thursday on the 10th week, the Wednesday, Friday, and Saturday on the 20th
