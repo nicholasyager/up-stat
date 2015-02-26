@@ -1,0 +1,126 @@
+---
+title: "RMSD Pattern Analysis"
+author: "Nicholas A. Yager"
+date: "2015-02-25"
+output: html_document
+---
+
+## Introduction
+
+For the UP-Stat data competition we are tasked to
+
+> discover the most compelling, appealing and practical patterns in the episodes 
+> of traffic congestion. The merits will be measured in terms of novelty of the 
+> patterns discovered, usability of the recommendations made, and originality of
+> the scientific methods used.
+
+With that in mind, we will approach the problem using a metric called RMSD, the
+[root-mean-square deviation][rmsd]. RMSD measures the average deviation of each
+element of two vectors. This on the whole can provide a single metric for 
+measuring large changes in a day's traffic in relation to some other set of
+traffic. In this specific instance, I am comparing each day of the week to the
+week prior.
+
+## Data Handling
+
+Loading the data is trivial with the exception of the date data. Dates should be
+converted from a string into a Date object for easy subsetting.
+```{r}
+# Read the data ----------------------------------------------------------------
+traffic <- read.csv("../../data/UrbanAnalytics2015.csv", sep=" ")
+
+## Parse the datetime as a Date object.
+traffic$DateTime <- strptime(traffic$DateTime, "%m/%d/%y %H:%M")
+
+stepsPerDay <- 1440/5
+dayList<-c("Sun.","Mon.","Tues.","Wed.","Thurs.","Fri.","Sat.")
+```
+
+Let's define a function that will calculate the RMSD for us. This function must
+accept two vectors of equal length, and it must also be able to tolerate NA v
+values in the data.
+```{r, echo=TRUE}
+rmsd <- function(vector1, vector2) {
+  deviation = (vector1 - vector2)^2
+  numNA = length(which(is.na(deviation)))
+  return(sqrt(sum(deviation,na.rm=T)/(length(deviation)-numNA)))
+}
+```
+
+First, we need to set some initial templates to compare our data against. To do
+this, I am making a list of vectors, with each element of the list holding the 
+traffic volume for that day. I will fill the templates with the first week of
+traffic from our data set.
+```{r,echo=TRUE}
+templates <- list()
+for (day in 1:7) {
+  startIndex <- (day-1)*stepsPerDay
+  endIndex   <- (day)*stepsPerDay -1
+  series <- traffic$Delay[startIndex:endIndex]
+  templates <- c(templates, list(series))
+}
+```
+
+Now, we need to generate vectors to process with our RMSD function. Sadly, the 
+original data contain gaps, outliers, and general nasties. What we will do, is
+for each day of the week will step week-by-week filling in a matrix of each 5
+minute period. After we fill in the matrix for a particular week day, we can
+calculate the RMSD with respect to the previous week. The function is slower than
+other huristic methods, but it does not fall prey to missing data problems that
+can be experienced other ways.
+```{r, echo=T}
+days <- traffic$DateTime[nrow(traffic)]$yday + 356 - traffic$DateTime[1]$yday
+weeks = floor(days/7)
+rmsds <- matrix(0, nrow=weeks-1, ncol=7)
+for (wday in 0:6) {
+
+  ## For each weekday, compile a matrix of every week's version and compare
+  weeklySubset = traffic[which(traffic$DateTime$wday == wday),]
+  weeklyMatrix <- matrix(NA,ncol=288, nrow=weeks)
+  for (index in 1:nrow(weeklySubset)) {
+    dayNumber = 1+  weeklySubset$DateTime[index]$yday + 356 *(weeklySubset$DateTime[index]$year - 113)  - weeklySubset$DateTime[1]$yday
+    week = 1 + floor(dayNumber/7)
+    minute = 1 + (weeklySubset$DateTime[index]$min + (60*weeklySubset$DateTime[index]$hour))/5
+    weeklyMatrix[week, minute] = weeklySubset$Volume[index]
+  }
+  for (week in 1:(weeks-1)) {
+    rmsds[week, wday+1] <- rmsd(weeklyMatrix[week,],weeklyMatrix[week + 1,])
+  }
+}
+```
+
+The `rmsds` matrix returned can be visualized either as a timeseries, which is a
+little too messy for my taste
+
+```{r, echo=TRUE}
+matplot(rmsds,type="l",
+        lty=1,lwd=2,col=rainbow(7), ylab="RMSD",xlab="Week")
+legend("topleft",legend=dayList,fill=rainbow(7),
+       cex=0.75)
+```
+
+or as an image. 
+
+```{r, echo=TRUE}
+library(ggplot2)
+library(reshape2)
+ggplot(melt(rmsds), aes(Var1,Var2, fill=value)) +
+  scale_fill_gradientn(colours=c("white","blue","orange"),name="RMSD")+
+  xlab("Week")+
+  ylab("Day")+
+  geom_raster() +
+  theme( panel.background = element_rect(fill = "transparent", colour = NA),
+         panel.grid.minor = element_blank(),
+         panel.grid.major = element_blank()) +
+  scale_x_discrete(breaks = seq(1, 31, 1), labels = seq(2,32,1))+
+  scale_y_discrete(breaks=c("1","2","3","4","5","6","7"), labels=dayList, limits=c(1,2,3,4,5,6,7))
+
+```
+
+It is important to note that one abnormal day will be noticed asa high RMSD as 
+will the following day since it is not no longer as abnormal. It would appear 
+that the Sunday, Thursday, and Friday on the 6th week, the Tuesday, Wednesday, 
+and Thursday on the 10th week, the Wednesday, Friday, and Saturday on the 20th
+week, and the Monday on the 32nd week.
+
+[rmsd]:https://en.wikipedia.org/wiki/Root-mean-square_deviation
