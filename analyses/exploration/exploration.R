@@ -1,4 +1,5 @@
 
+rm(list=ls())
 # Data preparation -------------------------------------------------------------
 traffic <- read.csv("UrbanAnalytics2015.csv", sep=" ")
 traffic$DateTime <- strptime(traffic$DateTime, "%m/%d/%y %H:%M")
@@ -116,3 +117,21 @@ loadings(fit) # pc loadings
 plot(fit,type="lines") # scree plot
 fit$scores # the principal components
 biplot(fit)
+
+# Potential odd days -----------------------------------------------------------
+week = 7
+day = 0
+
+stepsPerDay <- 1440/5
+days <- 31
+steps = days * stepsPerDay
+
+startStep = 1 + 6*week*stepsPerDay
+endStep = 1 + 6*week*stepsPerDay + 1*stepsPerDay
+
+plot(traffic$Volume[startStep:endStep], pch=19)
+
+startStep = 6*(week-1)*stepsPerDay
+endStep = 6*(week-1)*stepsPerDay + 1*stepsPerDay
+points(traffic$Volume[startStep:endStep],
+       col="red")
