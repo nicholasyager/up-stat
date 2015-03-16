@@ -1,0 +1,40 @@
+\documentclass[12pt]{article}
+
+% PACKAGES
+\usepackage[margin=1.00in]{geometry}
+\renewcommand{\familydefault}{\sfdefault}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\Large
+\noindent
+\textbf{2013-14 Culver/East Main Traffic Analysis and Report}\\
+\normalsize
+by Nicholas Yager, Tom Hartvigsen, Matthew Taylor\\
+Group Name: "Three Degrees of Freedom"\\
+\today
+
+\hrule
+\vspace{2mm}
+
+\noindent
+\textbf{Introduction}
+
+
+
+\noindent
+\textbf{Data Analysis}
+
+
+
+\noindent
+\textbf{Recommendations}
+
+
+
+\noindent
+\textbf{Cited Literature}
+
+
+
+\end{document}
