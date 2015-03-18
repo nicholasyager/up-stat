@@ -1,40 +1,38 @@
-\documentclass[12pt]{article}
+\documentclass{report}
 
 % PACKAGES
 \usepackage[margin=1.00in]{geometry}
-\renewcommand{\familydefault}{\sfdefault}
+\usepackage[pdftex]{graphicx}
+\usepackage{indentfirst}
 
 \begin{document}
 \SweaveOpts{concordance=TRUE}
-\Large
-\noindent
-\textbf{2013-14 Culver/East Main Traffic Analysis and Report}\\
-\normalsize
-by Nicholas Yager, Tom Hartvigsen, Matthew Taylor\\
-Group Name: "Three Degrees of Freedom"\\
-\today
-
-\hrule
-\vspace{2mm}
+\input{./titlepage.tex}
 
 \noindent
-\textbf{Introduction}
+\section*{Introduction}
+
+This subsection should include a diagram of the interesction and some statistics
+about the interection. This should include information about the traffic flow
+rate (volume), the LOC classification, and some general information that is
+useful to the DOT.
 
 
 
 \noindent
-\textbf{Data Analysis}
+\section*{Data Analysis}
 
+\subsection*{Pattern Analysis}
+\subsection*{Bayesian Analysis}
+\subsection*{Weather Analysis}
 
+\noindent\section*{Recommendations}
+
+Nuke Rochester.
 
 \noindent
-\textbf{Recommendations}
+\section*{Cited Literature}
 
-
-
-\noindent
-\textbf{Cited Literature}
-
-
+Leviticus.
 
 \end{document}
