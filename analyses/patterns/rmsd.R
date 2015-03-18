@@ -70,15 +70,21 @@ ggplot(melt(rmsds), aes(Var1,Var2, fill=value)) +
   scale_x_discrete(breaks = seq(1, 31, 1), labels = seq(2,32,1))+
   scale_y_discrete(breaks=c("1","2","3","4","5","6","7"), labels=dayList, limits=c(1,2,3,4,5,6,7))
 
-colorFunc<-colorRampPalette(c("white","white","black"))
-indices <- order(rmsds[,1],decreasing=F)
+## Plot the abnormailties ------------------------------------------------------
 
-wday = 1
-week = 19
-titleString = paste()
-matplot(cbind(templates[[wday]], t(matrices[[wday]])[,week]),type="l",lty=1,
-        ylab="Traffic Volume (cars/hour)",xaxt="n", xlab="Hour")
-axis(1, seq(0,288,12), seq(0, 24, 1))
+
+rmsd_table <- melt(rmsds)
+indices <- order(rmsd_table$value, decreasing = T)
+
+for ( index in indices[1:10]) {
+    wday = rmsd_table$Var2[index]
+    week = rmsd_table$Var1[index]
+    titleString = paste(wday, week)
+    matplot(cbind(templates[[wday]], t(matrices[[wday]])[,week]),type="l",lty=1,
+            ylab="Traffic Volume (cars/hour)",xaxt="n", xlab="Hour",
+            main=titleString)
+    axis(1, seq(0,288,12), seq(0, 24, 1))
+}
 
 ## Pairwise RMSD ---------------------------------------------------------------
 firstDays <- 1:(7*32)
