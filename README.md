@@ -4,6 +4,10 @@
 
 - 2015-02-20: First report published on [exploratory analysis][report1]
 - 2015-02-25: Second report published on [root-mean-squared deviation][report2]
+- 2015-03-09: Added pairwise RMSD calculations to pick out any abnormal days.
+- 2015-03-16: Added correlation analysis. The results are very similar to the
+  RMSD data, but slightly more understandable.
+- 2015-03-18: Added some basic trend analysis.
 
 ## References
 Flynn MR, Kasimov AR, Nave J, Rosales RR, Seibold B. [Traffic Modeling - Phandom Traffic Jams and Traveling Jamitons][Flynn]
