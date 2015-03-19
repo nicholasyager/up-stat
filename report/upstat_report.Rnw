@@ -5,6 +5,9 @@
 \usepackage[pdftex]{graphicx}
 \usepackage{indentfirst}
 \usepackage{caption}
+% \usepackage{natbib}
+
+\bibliographystyle{ieeetr}
 
 \begin{document}
 \SweaveOpts{concordance=TRUE}
@@ -32,7 +35,20 @@ examine trends and patterns in the traffic recorded and to predict occurances of
 traffic congestion based on time of day, day of the week, and the weather
 conditions present.
 
-<<echo=FALSE>>=
+<<data-prep,echo=FALSE, results=hide>>=
+# Libraries!
+rm(list=ls())
+par(mfrow=c(1,1))
+packages <- c('ggplot2','reshape2','knitr')
+for (index in 1:length(packages)){
+  package = packages[index]
+  exists = require(package,character.only = T)
+  if (exists == FALSE) {
+    install.packages(package)
+    require(package,character.only = T)
+  }
+}
+
 # Data preparation -------------------------------------------------------------
 traffic <- read.csv("UrbanAnalytics2015.csv", sep=" ")
 traffic$DateTime <- strptime(traffic$DateTime, "%m/%d/%y %H:%M")
@@ -79,12 +95,17 @@ F & $\ge 80$\\
 \label{LOStable}
 \end{table}
 
-We examined the
+Using these classifications, we examined the average vehicle control delay for
+each five minute observation period. As shown in Figure \ref{fig:LOSfigure},
+the majority of observations have a Grade F Level of Service (58.38\%). Each of
+the other levels of service occured in between 7.45\% and 8.63\% of observations.
+This suggests that the Culver Road and East Main Street intersections is
+experienceing traffic congestion, in which each vehicle move in lock step with
+the vehicle in front of it \cite{HCM}.
 
 \begin{figure}[h]
 \centering
-<<echo=FALSE, fig=TRUE, height=3.5>>=
-require(ggplot2)
+<<LOCplot,echo=FALSE, fig=TRUE, height=3.5>>=
 AObservations<-which(traffic$Delay <= 10)
 BObservations<-which(traffic$Delay  > 10 & traffic$Delay <=20)
 CObservations<-which(traffic$Delay  > 20 & traffic$Delay <=35)
@@ -104,10 +125,57 @@ ggplot(LOSFrame, aes(x=LOS, y=Delay)) +
   theme_bw()
 @
 \caption{The Culver Road/East Main Street intersection has a poor Level of Service.}
-\label{LOSfigure}
+\label{fig:LOSfigure}
 \end{figure}
 
-Ut quis mauris et nisi cursus condimentum vitae eu mauris. Nunc mollis ultrices pulvinar. Mauris lobortis eros at ipsum maximus, ac iaculis purus porttitor. Etiam in arcu et turpis laoreet varius at id risus. Maecenas imperdiet congue tortor, in tristique purus porttitor in. Aenean aliquet sagittis egestas. Aenean et malesuada mi, in convallis ipsum. Nunc lacinia euismod pellentesque.
+We also examined the relationship between the traffic density (vehicles/mile)
+and traffic volume (vehicles/hour), also known as flux. Whe plotted, the
+relationship between the traffic density and the traffic volume creates the
+fundamental diagram of traffic flow \cite{HCM}, as shown in Figure \ref{fig:Fundamental}.
+The fundamental diagram presents a curve in which points on the left of the line
+represent free and bound traffic flow, and points on the right of the line
+represent the velocity of congested flow. Using linear regression techniques, we
+were able to estimate the free flow velocity to be 19.5 miles per hour and the
+traffic wave velocity to be 2.43 miles per hour against the direction of traffic.
+We also determiend thecritical traffic density to be 42.8 vehicles per mile.
+As the vehicle denisty passes the critical density, the traffic flow becomes
+more unstable leading to traffic waves and eventually congestion. To maximize
+the traffic flow, the vehicle density must remain below the critical density.
+
+\begin{figure}[h]
+\centering
+<<echo=FALSE, fig=TRUE, height=3.5, results=hide>>=
+par(mar=c(4.1, 4.1, 2.1, 2.1))
+density <- traffic$Volume/traffic$Speed
+plot(x=density[which(is.finite(density))],
+     y=traffic$Volume[which(is.finite(density))],
+     pch=19, cex=0.75, ylab="Traffic Volume (Vehicles/Hr,)",
+     xlab="Density (Vehicles/Mile)",xaxs="i", yaxs="i", ylim=c(0,900))
+
+density.free <- density[which(density<50)]
+volume.free  <- traffic$Volume[which(density<50)]
+freeVelocityModel <- lm(volume.free~density.free-1)
+summary(freeVelocityModel)
+abline(freeVelocityModel,col="red",lwd=2)
+
+density.congested <- density[which(density>=125 & is.finite(density))]
+volume.congested  <- traffic$Volume[which(density>=125 & is.finite(density))]
+congestedVelocityModel <- lm(volume.congested~density.congested)
+summary(congestedVelocityModel)
+abline(congestedVelocityModel,col="blue",lwd=2)
+
+criticalDensity = (congestedVelocityModel$coefficients[1])/(freeVelocityModel$coefficients[1] - congestedVelocityModel$coefficients[2])
+abline(v=criticalDensity, col="green",lwd=2)
+@
+\caption{\leftskip0.5in\rightskip0.5inFundamental diagram of traffic flow provides
+free flow and traffic wave velocities. Traffic density was calculated by
+dividing the traffic volume by the traffic speed. Using linear regression, we
+found the free flow velocity (19.5 mph) as depicted in red, the traffic wave
+velocity (2.43 mph) as depicted in blue, and the critical density (42.8 vehicles
+per mile) as depicted in green.}
+\label{fig:Fundamental}
+\end{figure}
+
 
 \subsection*{Trend and Pattern Analysis}
 
@@ -121,7 +189,7 @@ amet, consectetur adipiscing elit.
 
 \begin{figure}[h]
 \centering
-<<echo=FALSE, fig=TRUE, height=3.5>>=
+<<Binning,echo=FALSE, fig=FALSE, cache=TRUE, eval=TRUE, height=3.5>>=
 # Bin the volume each day  -----------------------------------------------------
 
 days <- traffic$DateTime[nrow(traffic)]$yday + 356 - traffic$DateTime[1]$yday
@@ -205,10 +273,10 @@ delayHolidays <- matrix(0, ncol=2, nrow=2)
 delayHolidays[1,] <- c(10, delayResults[10])
 delayHolidays[2,] <- c(7, delayResults[7])
 delayResults[c(10, 7)] <- NA
+@
 
-# Regress regress! -------------------------------------------------------------
+<<VolumePlot,echo=FALSE, fig=TRUE, height=3.5>>=
 week <- 1:32
-
 par(mfrow=c(1,2), mar=c(5.1,4.1,2.1,2.1))
 # Plot
 plot(delayResults[1:nrow(delayResults),],
@@ -231,7 +299,7 @@ volumeSummary<- summary(volumeModel)
 abline(volumeModel, col="red")
 par(mfrow=c(1,1), mar=c(5.1,4.1,4.1,2.1))
 @
-\caption{\leftskip1in\rightskip1in The median traffic delay and median weekly
+\caption{\leftskip0.5in\rightskip0.5in The median traffic delay and median weekly
 traffic volume are increasing over time. A linear regression of the median
 traffic delay for each week suggests that the traffic delay may be increasing
 \Sexpr{round(delayModel$coefficients[2],2)} seconds per week
@@ -260,6 +328,12 @@ Nuke Rochester.
 \noindent
 \section*{Cited Literature}
 
-Leviticus.
+\begin{thebibliography}{9}
+  \bibitem{HCM}
+    Transportation Research Board of the National Academies,
+    \emph{Highway Capacity Manual 2010}.
+    5th edition,
+    2010.
+\end{thebibliography}
 
 \end{document}
