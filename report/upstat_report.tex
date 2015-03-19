@@ -5,6 +5,7 @@
 \usepackage[pdftex]{graphicx}
 \usepackage{indentfirst}
 \usepackage{caption}
+\usepackage{float}
 % \usepackage{natbib}
 
 \bibliographystyle{ieeetr}
@@ -83,28 +84,35 @@ the vehicle in front of it \cite{HCM}.
 \begin{figure}[h]
 \centering
 \includegraphics{upstat_report-LOCplot}
-\caption{The Culver Road/East Main Street intersection has a poor Level of Service.}
+\caption{\leftskip0.25in\rightskip0.25in The Culver Road/East Main Street
+intersection has a poor Level of Service. The histogram on the left shows the
+distribution of the average vehicle control delay for each observation. The
+distribution is bimodal with peaks at zero seconds and 140 seconds. The median
+delay was 103 seconds with a IQR of
+123 seconds. The bar plot on the right shows the
+distribution of each LOS grade for each observation in our data set.
+Observations were given a letter grade based on the average vehicle control
+delay for each 5 minute interval. The majority of all observations had a delay
+of greater than 80 seconds, suggesting that the intersection is predominantly grade
+F.}
 \label{fig:LOSfigure}
 \end{figure}
 
-We also examined the relationship between the traffic density (vehicles/mile)
-and traffic volume (vehicles/hour), also known as flux. Whe plotted, the
-relationship between the traffic density and the traffic volume creates the
-fundamental diagram of traffic flow \cite{HCM}, as shown in Figure \ref{fig:Fundamental}.
-The fundamental diagram presents a curve in which points on the left of the line
-represent free and bound traffic flow, and points on the right of the line
-represent the velocity of congested flow. Using linear regression techniques, we
+We also examined the relationship between the traffic density and traffic volume,
+also known as flux. Whe plotted, the relationship between the traffic density
+and the traffic volume creates the fundamental diagram of traffic flow
+\cite{HCM}, as shown in Figure \ref{fig:Fundamental}. Using linear regression techniques, we
 were able to estimate the free flow velocity to be 19.5 miles per hour and the
 traffic wave velocity to be 2.43 miles per hour against the direction of traffic.
 We also determiend thecritical traffic density to be 42.8 vehicles per mile.
 As the vehicle denisty passes the critical density, the traffic flow becomes
-more unstable leading to traffic waves and eventually congestion. To maximize
+more unstable leading to traffic waves and congestion. To maximize
 the traffic flow, the vehicle density must remain below the critical density.
 
 \begin{figure}[h]
 \centering
 \includegraphics{upstat_report-003}
-\caption{\leftskip0.5in\rightskip0.5inFundamental diagram of traffic flow provides
+\caption{\leftskip0.25in\rightskip0.25inFundamental diagram of traffic flow provides
 free flow and traffic wave velocities. Traffic density was calculated by
 dividing the traffic volume by the traffic speed. Using linear regression, we
 found the free flow velocity (19.5 mph) as depicted in red, the traffic wave
@@ -124,11 +132,11 @@ Etiam at augue ac libero interdum euismod non nec sem. Aliquam erat volutpat.
 Phasellus auctor urna purus, ac rutrum eros fermentum ut. Lorem ipsum dolor sit
 amet, consectetur adipiscing elit.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 
 \includegraphics{upstat_report-VolumePlot}
-\caption{\leftskip0.5in\rightskip0.5in The median traffic delay and median weekly
+\caption{\leftskip0.25in\rightskip0.25in The median traffic delay and median weekly
 traffic volume are increasing over time. A linear regression of the median
 traffic delay for each week suggests that the traffic delay may be increasing
 0.24 seconds per week
