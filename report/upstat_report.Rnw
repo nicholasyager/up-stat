@@ -22,9 +22,7 @@
 %rate (volume), the LOC classification, and some general information that is
 %useful to the DOT.
 
-Praesent iaculis pulvinar justo eu cursus. Mauris a ex eget sapien finibus commodo. Aenean et malesuada nunc. Nam iaculis porttitor faucibus. Etiam consequat rhoncus eros ut vehicula. Mauris vel ligula non nisl posuere aliquet. Mauris ac pulvinar metus, feugiat faucibus metus. Proin vel gravida tellus. Phasellus quis metus sollicitudin, volutpat massa nec, euismod risus. Nunc iaculis pellentesque purus non lobortis. Nam ac neque varius, auctor velit in, pretium elit. Ut facilisis, lacus nec mattis aliquet, nisi sapien vehicula massa, nec pharetra velit orci ac magna. Pellentesque vel velit ornare, aliquam turpis sed, egestas lacus. Aliquam dapibus commodo nulla, nec tincidunt eros lacinia ut. Maecenas mi tellus, cursus at neque vitae, consectetur tempus eros.
-
-Aenean maximus metus metus, in varius lorem ultrices in. Nulla a tortor tempus, facilisis orci in, viverra augue. Maecenas viverra mattis velit, et volutpat elit finibus eu. Curabitur eu diam sed justo malesuada fringilla. Fusce ac nisl nec diam aliquam lobortis. Fusce fermentum ligula dui, vel condimentum erat convallis vitae. Etiam finibus dolor et feugiat iaculis. Duis varius nulla non dictum rutrum. Curabitur aliquet turpis id turpis fringilla, laoreet interdum mauris dictum. Praesent id pharetra tortor, ac laoreet urna. Sed porta lacus non sagittis condimentum.
+There has been intense study in the area of traffic management 
 
 \noindent
 \section*{Data Analysis}
@@ -366,10 +364,101 @@ tenth Tuesday and Wednesday correspond <UNKNOWN>.}
 
 \subsection*{Bayesian Analysis}
 
-\begin{figure}
-  \centering
-	\includegraphics{pCTplot.png}
-	\caption{Probability of observing congestion when given a specific time. A maximum of 91.2\% probability of congestion is marked on the graph and occurs at approximately at 5:15pm on Fridays.}
+
+
+\begin{figure}[h]
+\centering
+<<bayesplot,echo=FALSE, fig=TRUE>>=
+# Load Data
+dat = read.csv("UrbanAnalyticsWDay.csv")
+
+# Calculate Density
+dat[,9] = dat$Volume/dat$Speed
+names(dat)[9] = "Density"
+
+# Add in Congested or Not
+density_congest = 42.8
+congested = which(dat$Density>density_congest)
+notcongested = which(dat$Density<density_congest)
+dat[congested,10] = 1
+dat[notcongested,10] = 0
+names(dat)[10] = "Congested"
+
+# Remove NA
+dat = dat[-which(is.na(dat[,10])==TRUE),]
+
+# Sort By Days
+sunday = dat[which(dat$Day == "Sun"),]
+monday = dat[which(dat$Day == "Mon"),]
+tuesday = dat[which(dat$Day == "Tues"),]
+wednesday = dat[which(dat$Day == "Wed"),]
+thursday = dat[which(dat$Day == "Thurs"),]
+friday = dat[which(dat$Day == "Fri"),]
+saturday = dat[which(dat$Day == "Sat"),]
+
+# Set up Matrix
+probmat = matrix(0,ncol=8,nrow=(24*60)/5)
+colnames(probmat) = c("Time","Sun","Mon","Tues","Wed","Thur","Fri","Sat")
+probmat = as.data.frame(probmat)
+times = read.csv("time.csv",header=F)
+for (a in 1:nrow(times)){
+  probmat[a,1] = as.character(times[a,1])
+}
+
+probfunc = function(mat,day,x,pc){
+  for (a in 1:nrow(mat)){
+    # Get Time Variables
+    temp_time = mat[a,1]
+    temp_list = which(day[,7]==temp_time)
+    temp_cong = which(day[temp_list,10]==1)
+    # Calc Prob
+    pBA = length(temp_cong)/sum(day[,10]) # Prob that time is congested.
+    pA = pCongest # Prob Congest.
+    pB = length(temp_list)/nrow(day) # Prob Picking that Time.
+    mat[a,x] = pBA*pA/pB
+  }
+  return(mat)
+}
+
+pCongest = sum(sunday[,10])/nrow(sunday)
+probmat = probfunc(probmat,sunday,2,pCongest)
+
+pCongest = sum(monday[,10])/nrow(monday)
+probmat = probfunc(probmat,monday,3,pCongest)
+pCongest = sum(tuesday[,10])/nrow(tuesday)
+probmat = probfunc(probmat,tuesday,4,pCongest)
+pCongest = sum(wednesday[,10])/nrow(wednesday)
+probmat = probfunc(probmat,wednesday,5,pCongest)
+pCongest = sum(thursday[,10])/nrow(thursday)
+probmat = probfunc(probmat,thursday,6,pCongest)
+pCongest = sum(friday[,10])/nrow(friday)
+probmat = probfunc(probmat,friday,7,pCongest)
+pCongest = sum(saturday[,10])/nrow(saturday)
+probmat = probfunc(probmat,saturday,8,pCongest)
+
+# Plot All Days On One Plot!
+# Bayesian Probs
+plot(probmat[,2],type="l",axes=F,ylim=c(0,1),col="chartreuse3",
+     ylab = "p(C|T)",
+     xlab = "Time (Hours)",
+     main = "Probability of Congestion Given Time"
+     )
+axis(1,at=seq(0,288,by=24),lab=seq(0,24,by=2),las=2)
+axis(2,at=seq(0,1,by=0.1),lab=seq(0,1,by=0.1),las=1)
+lines(probmat[,3],col="aquamarine3")
+lines(probmat[,4],col="cadetblue")
+lines(probmat[,5],col="cornflowerblue")
+lines(probmat[,6],col="burlywood")
+lines(probmat[,7],col="darkorange")
+lines(probmat[,8],col="lawngreen")
+legend("topright",
+       c("Sun","Mon","Tues","Wed","Thur","Fri","Sat"),
+       col=c("chartreuse3","aquamarine3","cadetblue","cornflowerblue","burlywood","darkorange","lawngreen"),
+       cex=0.9,pch=15,title="Day")
+text(x = 208,y = 0.9117647, labels = "0.912",cex = 0.8, pos=3)
+@
+\caption{\leftskip0.25in\rightskip0.25in Hey, do I work?}
+\label{fig:bayesplot}
 \end{figure}
 
 Praesent iaculis pulvinar justo eu cursus. Mauris a ex eget sapien finibus commodo. Aenean et malesuada nunc. Nam iaculis porttitor faucibus. Etiam consequat rhoncus eros ut vehicula. Mauris vel ligula non nisl posuere aliquet. Mauris ac pulvinar metus, feugiat faucibus metus. Proin vel gravida tellus. Phasellus quis metus sollicitudin, volutpat massa nec, euismod risus. Nunc iaculis pellentesque purus non lobortis. Nam ac neque varius, auctor velit in, pretium elit. Ut facilisis, lacus nec mattis aliquet, nisi sapien vehicula massa, nec pharetra velit orci ac magna. Pellentesque vel velit ornare, aliquam turpis sed, egestas lacus. Aliquam dapibus commodo nulla, nec tincidunt eros lacinia ut. Maecenas mi tellus, cursus at neque vitae, consectetur tempus eros.
@@ -394,6 +483,7 @@ Nuke Rochester.
     \emph{Highway Capacity Manual 2010}.
     5th edition,
     2010.
+  \bibitem{}
 \end{thebibliography}
 
 \end{document}
