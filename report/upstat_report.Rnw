@@ -4,6 +4,7 @@
 \usepackage[margin=1.00in]{geometry}
 \usepackage[pdftex]{graphicx}
 \usepackage{indentfirst}
+\usepackage{caption}
 
 \begin{document}
 \SweaveOpts{concordance=TRUE}
@@ -17,15 +18,19 @@
 %rate (volume), the LOC classification, and some general information that is
 %useful to the DOT.
 
+Praesent iaculis pulvinar justo eu cursus. Mauris a ex eget sapien finibus commodo. Aenean et malesuada nunc. Nam iaculis porttitor faucibus. Etiam consequat rhoncus eros ut vehicula. Mauris vel ligula non nisl posuere aliquet. Mauris ac pulvinar metus, feugiat faucibus metus. Proin vel gravida tellus. Phasellus quis metus sollicitudin, volutpat massa nec, euismod risus. Nunc iaculis pellentesque purus non lobortis. Nam ac neque varius, auctor velit in, pretium elit. Ut facilisis, lacus nec mattis aliquet, nisi sapien vehicula massa, nec pharetra velit orci ac magna. Pellentesque vel velit ornare, aliquam turpis sed, egestas lacus. Aliquam dapibus commodo nulla, nec tincidunt eros lacinia ut. Maecenas mi tellus, cursus at neque vitae, consectetur tempus eros.
 
+Aenean maximus metus metus, in varius lorem ultrices in. Nulla a tortor tempus, facilisis orci in, viverra augue. Maecenas viverra mattis velit, et volutpat elit finibus eu. Curabitur eu diam sed justo malesuada fringilla. Fusce ac nisl nec diam aliquam lobortis. Fusce fermentum ligula dui, vel condimentum erat convallis vitae. Etiam finibus dolor et feugiat iaculis. Duis varius nulla non dictum rutrum. Curabitur aliquet turpis id turpis fringilla, laoreet interdum mauris dictum. Praesent id pharetra tortor, ac laoreet urna. Sed porta lacus non sagittis condimentum.
 
 \noindent
 \section*{Data Analysis}
 
 To assess the traffic conditions at the Culver Road and East Main Street
-intersection, we performed analyses to examine trends and patterns in the traffic
-observed, as well as methods for predicting traffic congestions based on time of
-day, day of the week, and the weather conditions present.
+intersection, we determined the current state of the intersection in terms of
+federal DOT guidelines for this class of intersection, as well as analyses to
+examine trends and patterns in the traffic recorded and to predict occurances of
+traffic congestion based on time of day, day of the week, and the weather
+conditions present.
 
 <<echo=FALSE>>=
 # Data preparation -------------------------------------------------------------
@@ -38,6 +43,71 @@ for (col in 1:4) {
   traffic[which(traffic[,col] >= bp$stats[5,col]),col] <- NA
 }
 @
+
+\subsection*{Traffic Analysis}
+
+There are a few common characteristics to examine when determining the traffic
+flow for a particular intersection. Namely, it is important to determine the
+amount of delay experience by drivers as they enter the intersection, the density
+of the vehicles as they pass through the intersection, and the velocity at which
+traffic flows through the intersection. With these three variables, it is possible
+to determine the effects of traffic congestions on the flow of traffic through
+the intersection.
+
+The amount of time that vehicles wait at an intersection is refered to as the
+Level of Service (LOS). Ranked in letter grades from A to F, the LOS is an
+identifier for the overal health of the intersection. Ideally, an intersecton
+should be classified as being either A, B, or C, denoting free flow, reasonably
+free flow, and stable flow, respectively. The 2010 Highway Capacity
+Manual classifications for LOS can be seen in Table \ref{LOStable}, in which grade
+A intersections have less then 10 seconds of vehicle control delay, whereas grade
+F intersections have more than 80 of vehicle control delay.
+
+\begin{table}[h]
+\centering
+\caption{Level of Service classifications published in the 2010 Highway Capacity
+Manual.}
+\begin{tabular}{c | c}
+\textbf{LOS} & \textbf{Vehicle Control Delay (Sec.)}\\\hline
+A & $\le 10$\\
+B & $10 - 20 $\\
+C & $20 - 35$\\
+D & $35 - 55$\\
+E & $55 - 80$\\
+F & $\ge 80$\\
+\end{tabular}
+\label{LOStable}
+\end{table}
+
+We examined the
+
+\begin{figure}[h]
+\centering
+<<echo=FALSE, fig=TRUE, height=3.5>>=
+require(ggplot2)
+AObservations<-which(traffic$Delay <= 10)
+BObservations<-which(traffic$Delay  > 10 & traffic$Delay <=20)
+CObservations<-which(traffic$Delay  > 20 & traffic$Delay <=35)
+DObservations<-which(traffic$Delay  > 35 & traffic$Delay <=55)
+EObservations<-which(traffic$Delay  > 55 & traffic$Delay <=80)
+FObservations<-which(traffic$Delay > 80)
+
+LOS <- c(length(AObservations), length(BObservations),
+         length(CObservations), length(DObservations),
+         length(EObservations), length(FObservations))
+LOS <- LOS/nrow(traffic)
+LOSFrame <- data.frame(LOS=c("A","B","C","D","E","F"), Delay=LOS)
+
+ggplot(LOSFrame, aes(x=LOS, y=Delay)) +
+  geom_bar(stat="identity") +
+  ylab("Vehicle Control Delay (Sec.)")+
+  theme_bw()
+@
+\caption{The Culver Road/East Main Street intersection has a poor Level of Service.}
+\label{LOSfigure}
+\end{figure}
+
+Ut quis mauris et nisi cursus condimentum vitae eu mauris. Nunc mollis ultrices pulvinar. Mauris lobortis eros at ipsum maximus, ac iaculis purus porttitor. Etiam in arcu et turpis laoreet varius at id risus. Maecenas imperdiet congue tortor, in tristique purus porttitor in. Aenean aliquet sagittis egestas. Aenean et malesuada mi, in convallis ipsum. Nunc lacinia euismod pellentesque.
 
 \subsection*{Trend and Pattern Analysis}
 
@@ -147,6 +217,7 @@ plot(delayResults[1:nrow(delayResults),],
 points(delayHolidays)
 trafficDelay <- delayResults[1:32,]
 delayModel <- lm(trafficDelay~week)
+delaySummary<- summary(delayModel)
 abline(delayModel, col="red")
 
 # Plot
@@ -156,22 +227,34 @@ plot(results[1:nrow(results),],
 points(volumeHolidays)
 trafficVolume <- results[1:32,]
 volumeModel <- lm(trafficVolume~week)
+volumeSummary<- summary(volumeModel)
 abline(volumeModel, col="red")
 par(mfrow=c(1,1), mar=c(5.1,4.1,4.1,2.1))
 @
-\caption{The median delay and volume is increasing over time. Lorem ipsum dolor
-sit amet, consectetur adipiscing elit. Donec vitae nunc quis sem cursus luctus
-in at est. Etiam at augue ac libero interdum euismod non nec sem. Aliquam erat
-volutpat. Phasellus auctor urna purus, ac rutrum eros fermentum ut. Lorem ipsum
-dolor sit amet, consectetur adipiscing elit.}
+\caption{\leftskip1in\rightskip1in The median traffic delay and median weekly
+traffic volume are increasing over time. A linear regression of the median
+traffic delay for each week suggests that the traffic delay may be increasing
+\Sexpr{round(delayModel$coefficients[2],2)} seconds per week
+($R^2 = \Sexpr{round(delaySummary$r.squared,2)}$). Similarly, a linear
+regression of the median number of vehicles to pass through the intersection per
+week suggests that the number of vehicles utilizing the intersection may be
+increasing at a rate of \Sexpr{round(volumeModel$coefficients[2],2)} vehicles
+per week ($R^2 = \Sexpr{round(volumeSummary$r.squared, 2)}$).}
 \label{trends}
 \end{figure}
 
 \subsection*{Bayesian Analysis}
+Praesent iaculis pulvinar justo eu cursus. Mauris a ex eget sapien finibus commodo. Aenean et malesuada nunc. Nam iaculis porttitor faucibus. Etiam consequat rhoncus eros ut vehicula. Mauris vel ligula non nisl posuere aliquet. Mauris ac pulvinar metus, feugiat faucibus metus. Proin vel gravida tellus. Phasellus quis metus sollicitudin, volutpat massa nec, euismod risus. Nunc iaculis pellentesque purus non lobortis. Nam ac neque varius, auctor velit in, pretium elit. Ut facilisis, lacus nec mattis aliquet, nisi sapien vehicula massa, nec pharetra velit orci ac magna. Pellentesque vel velit ornare, aliquam turpis sed, egestas lacus. Aliquam dapibus commodo nulla, nec tincidunt eros lacinia ut. Maecenas mi tellus, cursus at neque vitae, consectetur tempus eros.
+
+Aenean maximus metus metus, in varius lorem ultrices in. Nulla a tortor tempus, facilisis orci in, viverra augue. Maecenas viverra mattis velit, et volutpat elit finibus eu. Curabitur eu diam sed justo malesuada fringilla. Fusce ac nisl nec diam aliquam lobortis. Fusce fermentum ligula dui, vel condimentum erat convallis vitae. Etiam finibus dolor et feugiat iaculis. Duis varius nulla non dictum rutrum. Curabitur aliquet turpis id turpis fringilla, laoreet interdum mauris dictum. Praesent id pharetra tortor, ac laoreet urna. Sed porta lacus non sagittis condimentum.
 \subsection*{Weather Analysis}
+Praesent iaculis pulvinar justo eu cursus. Mauris a ex eget sapien finibus commodo. Aenean et malesuada nunc. Nam iaculis porttitor faucibus. Etiam consequat rhoncus eros ut vehicula. Mauris vel ligula non nisl posuere aliquet. Mauris ac pulvinar metus, feugiat faucibus metus. Proin vel gravida tellus. Phasellus quis metus sollicitudin, volutpat massa nec, euismod risus. Nunc iaculis pellentesque purus non lobortis. Nam ac neque varius, auctor velit in, pretium elit. Ut facilisis, lacus nec mattis aliquet, nisi sapien vehicula massa, nec pharetra velit orci ac magna. Pellentesque vel velit ornare, aliquam turpis sed, egestas lacus. Aliquam dapibus commodo nulla, nec tincidunt eros lacinia ut. Maecenas mi tellus, cursus at neque vitae, consectetur tempus eros.
 
+Aenean maximus metus metus, in varius lorem ultrices in. Nulla a tortor tempus, facilisis orci in, viverra augue. Maecenas viverra mattis velit, et volutpat elit finibus eu. Curabitur eu diam sed justo malesuada fringilla. Fusce ac nisl nec diam aliquam lobortis. Fusce fermentum ligula dui, vel condimentum erat convallis vitae. Etiam finibus dolor et feugiat iaculis. Duis varius nulla non dictum rutrum. Curabitur aliquet turpis id turpis fringilla, laoreet interdum mauris dictum. Praesent id pharetra tortor, ac laoreet urna. Sed porta lacus non sagittis condimentum.
 \noindent\section*{Recommendations}
+Praesent iaculis pulvinar justo eu cursus. Mauris a ex eget sapien finibus commodo. Aenean et malesuada nunc. Nam iaculis porttitor faucibus. Etiam consequat rhoncus eros ut vehicula. Mauris vel ligula non nisl posuere aliquet. Mauris ac pulvinar metus, feugiat faucibus metus. Proin vel gravida tellus. Phasellus quis metus sollicitudin, volutpat massa nec, euismod risus. Nunc iaculis pellentesque purus non lobortis. Nam ac neque varius, auctor velit in, pretium elit. Ut facilisis, lacus nec mattis aliquet, nisi sapien vehicula massa, nec pharetra velit orci ac magna. Pellentesque vel velit ornare, aliquam turpis sed, egestas lacus. Aliquam dapibus commodo nulla, nec tincidunt eros lacinia ut. Maecenas mi tellus, cursus at neque vitae, consectetur tempus eros.
 
+Aenean maximus metus metus, in varius lorem ultrices in. Nulla a tortor tempus, facilisis orci in, viverra augue. Maecenas viverra mattis velit, et volutpat elit finibus eu. Curabitur eu diam sed justo malesuada fringilla. Fusce ac nisl nec diam aliquam lobortis. Fusce fermentum ligula dui, vel condimentum erat convallis vitae. Etiam finibus dolor et feugiat iaculis. Duis varius nulla non dictum rutrum. Curabitur aliquet turpis id turpis fringilla, laoreet interdum mauris dictum. Praesent id pharetra tortor, ac laoreet urna. Sed porta lacus non sagittis condimentum.
 Nuke Rochester.
 
 \noindent
