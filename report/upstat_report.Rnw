@@ -325,6 +325,13 @@ per week ($R^2 = \Sexpr{round(volumeSummary$r.squared, 2)}$).}
 \end{figure}
 
 \subsection*{Bayesian Analysis}
+
+\begin{figure}
+  \centering
+	\includegraphics{pCTplot.png}
+	\caption{Probability of observing congestion when given a specific time. A maximum of 91.2\% probability of congestion is marked on the graph and occurs at approximately at 5:15pm on Fridays.}
+\end{figure}
+
 Praesent iaculis pulvinar justo eu cursus. Mauris a ex eget sapien finibus commodo. Aenean et malesuada nunc. Nam iaculis porttitor faucibus. Etiam consequat rhoncus eros ut vehicula. Mauris vel ligula non nisl posuere aliquet. Mauris ac pulvinar metus, feugiat faucibus metus. Proin vel gravida tellus. Phasellus quis metus sollicitudin, volutpat massa nec, euismod risus. Nunc iaculis pellentesque purus non lobortis. Nam ac neque varius, auctor velit in, pretium elit. Ut facilisis, lacus nec mattis aliquet, nisi sapien vehicula massa, nec pharetra velit orci ac magna. Pellentesque vel velit ornare, aliquam turpis sed, egestas lacus. Aliquam dapibus commodo nulla, nec tincidunt eros lacinia ut. Maecenas mi tellus, cursus at neque vitae, consectetur tempus eros.
 
 Aenean maximus metus metus, in varius lorem ultrices in. Nulla a tortor tempus, facilisis orci in, viverra augue. Maecenas viverra mattis velit, et volutpat elit finibus eu. Curabitur eu diam sed justo malesuada fringilla. Fusce ac nisl nec diam aliquam lobortis. Fusce fermentum ligula dui, vel condimentum erat convallis vitae. Etiam finibus dolor et feugiat iaculis. Duis varius nulla non dictum rutrum. Curabitur aliquet turpis id turpis fringilla, laoreet interdum mauris dictum. Praesent id pharetra tortor, ac laoreet urna. Sed porta lacus non sagittis condimentum.
