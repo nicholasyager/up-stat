@@ -26,7 +26,11 @@
 %rate (volume), the LOC classification, and some general information that is
 %useful to the DOT.
 
-There has been intense study in the area of traffic management since the mid-1990s. The ability to quantify and discern underlying patterns by use of a simple loop detector is a useful tool in understanding the complex nature of transportation systems. 
+There has been intense study in the area of traffic management since the mid-1990s. The ability to quantify and discern underlying patterns by use of a simple loop detector is a useful tool in understanding the complex nature of transportation systems. We were tasked with identifying unique trends in the data and to provide sound recommendations to improve traffic conditions for the intersection of Culver Road and East Main Street in Rochester, New York. The data, obtained from a loop detector approximately 200 feet away from intersection in the southbound lane, has nearly eight months of data stretching from October of 2013 to June of 2014. The loop detector transmits data in five minute intervals, and calculates pertinent metrics such as estimated hourly volume, number of cars approaching a red light, delay, and others. 
+
+The intersection, pictured in \ref{fig:intersection}, is part of an important byway between Bay Street and East Main Street. Zoning data provided by the city of Rochester shows us that the area surrounding this portion of Culver Road is mainly residential. However, there are designated commercial zones at both the intersections of Bay and East Main, and additional commercial lots in between both of these locations \cite{PropInfo}. These are mainly smaller business and not large scale commercial plazas similar to those in Henrietta or elsewhere in the city of Rochester. It is important to consider this information in conjunction with the results of our analyses when providing meaningful suggestions. 
+
+
 
 \begin{figure}
         \centering
@@ -533,10 +537,16 @@ Praesent iaculis pulvinar justo eu cursus. Mauris a ex eget sapien finibus commo
 Aenean maximus metus metus, in varius lorem ultrices in. Nulla a tortor tempus, facilisis orci in, viverra augue. Maecenas viverra mattis velit, et volutpat elit finibus eu. Curabitur eu diam sed justo malesuada fringilla. Fusce ac nisl nec diam aliquam lobortis. Fusce fermentum ligula dui, vel condimentum erat convallis vitae. Etiam finibus dolor et feugiat iaculis. Duis varius nulla non dictum rutrum. Curabitur aliquet turpis id turpis fringilla, laoreet interdum mauris dictum. Praesent id pharetra tortor, ac laoreet urna. Sed porta lacus non sagittis condimentum.
 Nuke Rochester.
 
-\noindent
-\section*{Cited Literature}
-
 \begin{thebibliography}{9}
+  \bibitem{PropInfo}
+    City of Rochester,
+    \emph{Property Information Application}.
+    http://maps.cityofrochester.gov/propinfo/.
+  \bibitem{TrafficMap}
+    City of Rochester,
+    \emph{Traffic Volume Map}.
+    2014.
+    http://www2.monroecounty.gov/files/dot/pdfs/City-adt-map-through-2014.pdf.
   \bibitem{HCM}
     Transportation Research Board of the National Academies,
     \emph{Highway Capacity Manual 2010}.
