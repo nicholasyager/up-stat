@@ -22,7 +22,7 @@
 %rate (volume), the LOC classification, and some general information that is
 %useful to the DOT.
 
-There has been intense study in the area of traffic management 
+There has been intense study in the area of traffic management
 
 \noindent
 \section*{Data Analysis}
@@ -336,11 +336,16 @@ analysis we constructed template days of the week, seven traffic time series tha
 are the median traffic volume for every 5 minute interval. We then calculated the
 correlation between the weekday template and the day of interest for each day in
 our data set. A plot of each day's correlation, as shown in Figure \ref{fig:correlation},
-outlines the variablity in each day's traffic patterns.
+outlines the variablity in each day's traffic patterns. An apt example of abnormal
+driving is the seventh Thursday of the data set, which corresponds to Thanksgiving.
+The 2013 Thanksgiving traffic was abnormally low for a Thursday. Similarly, the
+10th and 20th Wednesdays of the data set exhibit similar patterns of minimal traffic..
 
 \begin{figure}[h]
 \centering
 <<echo=FALSE,fig=TRUE,results=hide, height=3>>=
+# Remove the abnormality
+cors[6, 1] <- NA
 dayList<-c("Sun.","Mon.","Tues.","Wed.","Thurs.","Fri.","Sat.")
 ggplot(melt(cors), aes(Var1,Var2, fill=value)) +
   scale_fill_gradientn(colours=c("orange","blue","white"), name="Correlation")+
@@ -350,7 +355,7 @@ ggplot(melt(cors), aes(Var1,Var2, fill=value)) +
   theme( panel.background = element_rect(fill = "transparent", colour = NA),
          panel.grid.minor = element_blank(),
          panel.grid.major = element_blank(),
-         axis.text.x = element_text(size=8)) +
+         axis.text.x = element_text(size=7)) +
   scale_x_discrete(breaks = seq(1, 32, 1), labels = seq(1,32,1))+
   scale_y_discrete(breaks=c("1","2","3","4","5","6","7"), labels=dayList, limits=c(1,2,3,4,5,6,7))
 @
@@ -358,8 +363,28 @@ ggplot(melt(cors), aes(Var1,Var2, fill=value)) +
 traffic patterns. In this color scale, white indicates high correlation, purple
 indicates moderate correlation, and orange indicates low correlation. Some days of
 interest include the seventh Thursday, which corresponds with Thanksgiving, the
-tenth Tuesday and Wednesday correspond <UNKNOWN>.}
+10th Tuesday and Wednesday, and the 20th Wednesday.}
 \label{fig:correlation}
+\end{figure}
+
+We can directly compare the low traffic seen on the 10th Wednesday, the 20th
+Wednesday, and Thanksgiving. As seen in Figure.
+
+\begin{figure}[h]
+\centering
+<<echo=F, fig=TRUE>>=
+par(mar=c(4.1,4.1,2.1,2.1))
+plot(volumeMatrices[[4]][1,], type="l",
+     ylab="Traffic Volume (Vehicles/Hr.)",
+     xlab="Hour",xaxt="n")
+lines(matrices[[4]][10,], col="blue")
+lines(matrices[[5]][7,], col="orange")
+legend("topleft", fill=c("black","blue","orange"),
+       legend=c("Example Weds.","10th Weds.","Thanksgiving"))
+axis(1, seq(0,288,12), seq(0, 24, 1))
+@
+\caption{December 18th traffic is similar to Thanksgiving holiday traffic.}
+\label{fig:wednesday}
 \end{figure}
 
 \subsection*{Bayesian Analysis}
