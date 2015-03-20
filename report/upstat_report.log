@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/Arch Linux) (preloaded format=pdflatex 2015.2.8)  20 MAR 2015 00:58
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/Arch Linux) (preloaded format=pdflatex 2015.2.8)  20 MAR 2015 01:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -83,6 +83,39 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 \Gin@req@height=\dimen111
 \Gin@req@width=\dimen112
 )
+(/usr/share/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+
+(/usr/share/texmf-dist/tex/latex/latexconfig/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+
+(/usr/share/texmf-dist/tex/latex/colortbl/colortbl.sty
+Package: colortbl 2012/02/13 v1.0a Color table columns (DPC)
+
+(/usr/share/texmf-dist/tex/latex/tools/array.sty
+Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
+\col@sep=\dimen113
+\extrarowheight=\dimen114
+\NC@list=\toks16
+\extratabsurround=\skip43
+\backup@length=\skip44
+)
+\everycr=\toks17
+\minrowclearance=\skip45
+)
+\rownum=\count92
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
+Package xcolor Info: Model `RGB' extended on input line 1353.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
+)
 (/usr/share/texmf-dist/tex/latex/tools/indentfirst.sty
 Package: indentfirst 1995/11/23 v1.03 Indent first paragraph (DPC)
 )
@@ -92,22 +125,22 @@ Package: caption 2013/05/02 v3.3-89 Customizing captions (AR)
 (/usr/share/texmf-dist/tex/latex/caption/caption3.sty
 Package: caption3 2013/05/02 v1.6-88 caption3 kernel (AR)
 Package caption3 Info: TeX engine: e-TeX on input line 57.
-\captionmargin=\dimen113
-\captionmargin@=\dimen114
-\captionwidth=\dimen115
-\caption@tempdima=\dimen116
-\caption@indent=\dimen117
-\caption@parindent=\dimen118
-\caption@hangindent=\dimen119
+\captionmargin=\dimen115
+\captionmargin@=\dimen116
+\captionwidth=\dimen117
+\caption@tempdima=\dimen118
+\caption@indent=\dimen119
+\caption@parindent=\dimen120
+\caption@hangindent=\dimen121
 )
-\c@ContinuedFloat=\count92
+\c@ContinuedFloat=\count93
 )
 (/usr/share/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count93
-\float@exts=\toks16
+\c@float@type=\count94
+\float@exts=\toks18
 \float@box=\box26
-\@float@everytoks=\toks17
+\@float@everytoks=\toks19
 \@floatcapt=\box27
 )
 (/usr/share/texmf/tex/latex/Sweave.sty
@@ -121,11 +154,11 @@ Package: fancyvrb 2008/02/07
 
 Style option: `fancyvrb' v2.7a, with DG/SPQR fixes, and firstline=lastline fix 
 <2008/02/07> (tvz)
-\FV@CodeLineNo=\count94
+\FV@CodeLineNo=\count95
 \FV@InFile=\read1
 \FV@TabBox=\box28
-\c@FancyVerbLine=\count95
-\FV@StepNumber=\count96
+\c@FancyVerbLine=\count96
+\FV@StepNumber=\count97
 \FV@OutFile=\write3
 ) (/usr/share/texmf-dist/tex/latex/base/textcomp.sty
 Package: textcomp 2005/09/27 v1.99g Standard LaTeX package
@@ -233,24 +266,24 @@ File: t1aer.fd 1997/11/16 Font definitions for T1/aer.
 No file upstat_report.aux.
 \openout1 = `upstat_report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 14.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 14.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 15.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 15.
 (/usr/share/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    ... okay on input line 15.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -288,17 +321,17 @@ LaTeX Font Info:    ... okay on input line 14.
 
 (/usr/share/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count97
-\scratchdimen=\dimen120
+\scratchcounter=\count98
+\scratchdimen=\dimen122
 \scratchbox=\box29
-\nofMPsegments=\count98
-\nofMParguments=\count99
-\everyMPshowfont=\toks18
-\MPscratchCnt=\count100
-\MPscratchDim=\dimen121
-\MPnumerator=\count101
-\makeMPintoPDFobject=\count102
-\everyMPtoPDFconversion=\toks19
+\nofMPsegments=\count99
+\nofMParguments=\count100
+\everyMPshowfont=\toks20
+\MPscratchCnt=\count101
+\MPscratchDim=\dimen123
+\MPnumerator=\count102
+\makeMPintoPDFobject=\count103
+\everyMPtoPDFconversion=\toks21
 ) (/usr/share/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -351,65 +384,65 @@ Package caption Info: End \AtBeginDocument code.
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}])
 
-LaTeX Warning: Reference `LOStable' on page 1 undefined on input line 54.
+LaTeX Warning: Reference `LOStable' on page 1 undefined on input line 55.
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 62.
+(Font)              <7> on input line 63.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 62.
+(Font)              <5> on input line 63.
 
-LaTeX Warning: Reference `fig:LOSfigure' on page 1 undefined on input line 75.
+LaTeX Warning: Reference `fig:LOSfigure' on page 1 undefined on input line 76.
 
 
-LaTeX Warning: Citation `HCM' on page 1 undefined on input line 80.
+LaTeX Warning: Citation `HCM' on page 1 undefined on input line 81.
 
 <upstat_report-LOCplot.pdf, id=9, 433.62pt x 216.81pt>
 File: upstat_report-LOCplot.pdf Graphic file (type pdf)
 
 <use upstat_report-LOCplot.pdf>
-Package pdftex.def Info: upstat_report-LOCplot.pdf used on input line 84.
+Package pdftex.def Info: upstat_report-LOCplot.pdf used on input line 85.
 (pdftex.def)             Requested size: 375.80544pt x 187.9119pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-LaTeX Warning: Citation `HCM' on page 1 undefined on input line 102.
+LaTeX Warning: Citation `HCM' on page 1 undefined on input line 103.
 
 
 LaTeX Warning: Reference `fig:Fundamental' on page 1 undefined on input line 10
-2.
+3.
 
 <upstat_report-003.pdf, id=10, 433.62pt x 216.81pt>
 File: upstat_report-003.pdf Graphic file (type pdf)
 
 <use upstat_report-003.pdf>
-Package pdftex.def Info: upstat_report-003.pdf used on input line 112.
+Package pdftex.def Info: upstat_report-003.pdf used on input line 113.
 (pdftex.def)             Requested size: 375.80544pt x 187.9119pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-LaTeX Warning: Reference `trends' on page 1 undefined on input line 127.
+LaTeX Warning: Reference `trends' on page 1 undefined on input line 128.
 
 [1] <upstat_report-VolumePlot.pdf, id=17, 433.62pt x 252.945pt>
 File: upstat_report-VolumePlot.pdf Graphic file (type pdf)
 
 <use upstat_report-VolumePlot.pdf>
-Package pdftex.def Info: upstat_report-VolumePlot.pdf used on input line 139.
+Package pdftex.def Info: upstat_report-VolumePlot.pdf used on input line 140.
 (pdftex.def)             Requested size: 375.80544pt x 219.23055pt.
 
 
 LaTeX Warning: Reference `fig:correlation' on page 2 undefined on input line 15
-7.
+8.
 
 [2 <./upstat_report-LOCplot.pdf> <./upstat_report-VolumePlot.pdf>]
 <upstat_report-006.pdf, id=33, 433.62pt x 216.81pt>
 File: upstat_report-006.pdf Graphic file (type pdf)
 
 <use upstat_report-006.pdf>
-Package pdftex.def Info: upstat_report-006.pdf used on input line 165.
+Package pdftex.def Info: upstat_report-006.pdf used on input line 166.
 (pdftex.def)             Requested size: 375.80544pt x 187.9119pt.
 
 
@@ -419,28 +452,25 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 File: upstat_report-007.pdf Graphic file (type pdf)
 
 <use upstat_report-007.pdf>
-Package pdftex.def Info: upstat_report-007.pdf used on input line 182.
+Package pdftex.def Info: upstat_report-007.pdf used on input line 183.
 (pdftex.def)             Requested size: 375.80544pt x 187.9119pt.
 
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<upstat_report-bayesplot.pdf, id=35, 433.62pt x 433.62pt>
+<upstat_report-bayesplot.pdf, id=35, 433.62pt x 289.08pt>
 File: upstat_report-bayesplot.pdf Graphic file (type pdf)
 
 <use upstat_report-bayesplot.pdf>
-Package pdftex.def Info: upstat_report-bayesplot.pdf used on input line 193.
-(pdftex.def)             Requested size: 375.80544pt x 375.8238pt.
+Package pdftex.def Info: upstat_report-bayesplot.pdf used on input line 192.
+(pdftex.def)             Requested size: 375.80544pt x 250.5492pt.
+ [3 <./upstat_report-003.pdf> <./upstat_report-007.pdf>] [4 <./upstat_report-00
+6.pdf> <./upstat_report-bayesplot.pdf>]
 
-Underfull \hbox (badness 10000) in paragraph at lines 194--194
- []\T1/aer/m/n/10 Figure 6: |Hey, do I work?| 
- []
+LaTeX Warning: Reference `fig:bayesplot' on page 5 undefined on input line 198.
 
 
-LaTeX Warning: `h' float specifier changed to `ht'.
 
-[3 <./upstat_report-003.pdf>] [4 <./upstat_report-006.pdf>] [5 <./upstat_report
--007.pdf>] [6 <./upstat_report-bayesplot.pdf>] [7
+LaTeX Warning: Reference `bayestable' on page 5 undefined on input line 215.
+
+[5] [6] [7
 
 ] (./upstat_report.aux)
 
@@ -451,13 +481,13 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 4318 strings out of 493108
- 65341 string characters out of 6140726
- 131448 words of memory out of 5000000
- 7692 multiletter control sequences out of 15000+600000
+ 4877 strings out of 493108
+ 71680 string characters out of 6140726
+ 143915 words of memory out of 5000000
+ 8238 multiletter control sequences out of 15000+600000
  34236 words of font info for 61 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,8n,38p,820b,279s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,10n,38p,820b,291s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fon
 ts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texmf-dist/fonts/type1/publ
@@ -465,7 +495,7 @@ ic/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr
 /share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-d
 ist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on upstat_report.pdf (8 pages, 3491967 bytes).
+Output written on upstat_report.pdf (8 pages, 3496430 bytes).
 PDF statistics:
  104 PDF objects out of 1000 (max. 8388607)
  70 compressed objects within 1 object stream
