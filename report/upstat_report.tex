@@ -23,9 +23,7 @@
 %rate (volume), the LOC classification, and some general information that is
 %useful to the DOT.
 
-Praesent iaculis pulvinar justo eu cursus. Mauris a ex eget sapien finibus commodo. Aenean et malesuada nunc. Nam iaculis porttitor faucibus. Etiam consequat rhoncus eros ut vehicula. Mauris vel ligula non nisl posuere aliquet. Mauris ac pulvinar metus, feugiat faucibus metus. Proin vel gravida tellus. Phasellus quis metus sollicitudin, volutpat massa nec, euismod risus. Nunc iaculis pellentesque purus non lobortis. Nam ac neque varius, auctor velit in, pretium elit. Ut facilisis, lacus nec mattis aliquet, nisi sapien vehicula massa, nec pharetra velit orci ac magna. Pellentesque vel velit ornare, aliquam turpis sed, egestas lacus. Aliquam dapibus commodo nulla, nec tincidunt eros lacinia ut. Maecenas mi tellus, cursus at neque vitae, consectetur tempus eros.
-
-Aenean maximus metus metus, in varius lorem ultrices in. Nulla a tortor tempus, facilisis orci in, viverra augue. Maecenas viverra mattis velit, et volutpat elit finibus eu. Curabitur eu diam sed justo malesuada fringilla. Fusce ac nisl nec diam aliquam lobortis. Fusce fermentum ligula dui, vel condimentum erat convallis vitae. Etiam finibus dolor et feugiat iaculis. Duis varius nulla non dictum rutrum. Curabitur aliquet turpis id turpis fringilla, laoreet interdum mauris dictum. Praesent id pharetra tortor, ac laoreet urna. Sed porta lacus non sagittis condimentum.
+There has been intense study in the area of traffic management
 
 \noindent
 \section*{Data Analysis}
@@ -126,11 +124,14 @@ per mile) as depicted in green.}
 
 To examine the general trend in the metrics we were provided, we performed linear
 and multivariate regression. These techniques allows us to approximate the traffic
-volume and delay. As shown in Figure \ref{trends}. Lorem ipsum dolor sit amet,
-consectetur adipiscing elit. Donec vitae nunc quis sem cursus luctus in at est.
-Etiam at augue ac libero interdum euismod non nec sem. Aliquam erat volutpat.
-Phasellus auctor urna purus, ac rutrum eros fermentum ut. Lorem ipsum dolor sit
-amet, consectetur adipiscing elit.
+volume and delay. Figure \ref{trends} shows the median delay for each week and
+the median traffic volume for each week with the linear regression for each data
+set. Our data suggest that the median amount of time that vehicles wait at the
+intersection may be increasing by 0.24 seconds per week. Our data also suggest
+that the median number of vehicles utilizing the intersection may be increasing
+by approximately 11 vehicles per week. Although the correlation coefficients are
+rather low, we are confident that the traffic congestions will worsen as more
+vehicles utilize the intersection.
 
 \begin{figure}[H]
 \centering
@@ -148,29 +149,30 @@ per week ($R^2 = 0.24$).}
 \label{trends}
 \end{figure}
 
-\subsection*{Bayesian Analysis}
-Praesent iaculis pulvinar justo eu cursus. Mauris a ex eget sapien finibus commodo. Aenean et malesuada nunc. Nam iaculis porttitor faucibus. Etiam consequat rhoncus eros ut vehicula. Mauris vel ligula non nisl posuere aliquet. Mauris ac pulvinar metus, feugiat faucibus metus. Proin vel gravida tellus. Phasellus quis metus sollicitudin, volutpat massa nec, euismod risus. Nunc iaculis pellentesque purus non lobortis. Nam ac neque varius, auctor velit in, pretium elit. Ut facilisis, lacus nec mattis aliquet, nisi sapien vehicula massa, nec pharetra velit orci ac magna. Pellentesque vel velit ornare, aliquam turpis sed, egestas lacus. Aliquam dapibus commodo nulla, nec tincidunt eros lacinia ut. Maecenas mi tellus, cursus at neque vitae, consectetur tempus eros.
+We can also use the recorded vehicle volumes for each day to detect traffic
+abnormailties as a means of locating interesting traffic patterns. To perform this
+analysis we constructed template days of the week, seven traffic time series that
+are the median traffic volume for every 5 minute interval. We then calculated the
+correlation between the weekday template and the day of interest for each day in
+our data set. A plot of each day's correlation, as shown in Figure \ref{fig:correlation},
+outlines the variablity in each day's traffic patterns. An apt example of abnormal
+driving is the seventh Thursday of the data set, which corresponds to Thanksgiving.
+The 2013 Thanksgiving traffic was abnormally low for a Thursday. Similarly, the
+10th and 20th Wednesdays of the data set exhibit similar patterns of minimal traffic..
 
-Aenean maximus metus metus, in varius lorem ultrices in. Nulla a tortor tempus, facilisis orci in, viverra augue. Maecenas viverra mattis velit, et volutpat elit finibus eu. Curabitur eu diam sed justo malesuada fringilla. Fusce ac nisl nec diam aliquam lobortis. Fusce fermentum ligula dui, vel condimentum erat convallis vitae. Etiam finibus dolor et feugiat iaculis. Duis varius nulla non dictum rutrum. Curabitur aliquet turpis id turpis fringilla, laoreet interdum mauris dictum. Praesent id pharetra tortor, ac laoreet urna. Sed porta lacus non sagittis condimentum.
-\subsection*{Weather Analysis}
-Praesent iaculis pulvinar justo eu cursus. Mauris a ex eget sapien finibus commodo. Aenean et malesuada nunc. Nam iaculis porttitor faucibus. Etiam consequat rhoncus eros ut vehicula. Mauris vel ligula non nisl posuere aliquet. Mauris ac pulvinar metus, feugiat faucibus metus. Proin vel gravida tellus. Phasellus quis metus sollicitudin, volutpat massa nec, euismod risus. Nunc iaculis pellentesque purus non lobortis. Nam ac neque varius, auctor velit in, pretium elit. Ut facilisis, lacus nec mattis aliquet, nisi sapien vehicula massa, nec pharetra velit orci ac magna. Pellentesque vel velit ornare, aliquam turpis sed, egestas lacus. Aliquam dapibus commodo nulla, nec tincidunt eros lacinia ut. Maecenas mi tellus, cursus at neque vitae, consectetur tempus eros.
+\begin{figure}[h]
+\centering
+\includegraphics{upstat_report-006}
+\caption{Correlation analysis shows holidays, data collection errors, and small-scale
+traffic patterns. In this color scale, white indicates high correlation, purple
+indicates moderate correlation, and orange indicates low correlation. Some days of
+interest include the seventh Thursday, which corresponds with Thanksgiving, the
+10th Tuesday and Wednesday, and the 20th Wednesday.}
+\label{fig:correlation}
+\end{figure}
 
-Aenean maximus metus metus, in varius lorem ultrices in. Nulla a tortor tempus, facilisis orci in, viverra augue. Maecenas viverra mattis velit, et volutpat elit finibus eu. Curabitur eu diam sed justo malesuada fringilla. Fusce ac nisl nec diam aliquam lobortis. Fusce fermentum ligula dui, vel condimentum erat convallis vitae. Etiam finibus dolor et feugiat iaculis. Duis varius nulla non dictum rutrum. Curabitur aliquet turpis id turpis fringilla, laoreet interdum mauris dictum. Praesent id pharetra tortor, ac laoreet urna. Sed porta lacus non sagittis condimentum.
-\noindent\section*{Recommendations}
-Praesent iaculis pulvinar justo eu cursus. Mauris a ex eget sapien finibus commodo. Aenean et malesuada nunc. Nam iaculis porttitor faucibus. Etiam consequat rhoncus eros ut vehicula. Mauris vel ligula non nisl posuere aliquet. Mauris ac pulvinar metus, feugiat faucibus metus. Proin vel gravida tellus. Phasellus quis metus sollicitudin, volutpat massa nec, euismod risus. Nunc iaculis pellentesque purus non lobortis. Nam ac neque varius, auctor velit in, pretium elit. Ut facilisis, lacus nec mattis aliquet, nisi sapien vehicula massa, nec pharetra velit orci ac magna. Pellentesque vel velit ornare, aliquam turpis sed, egestas lacus. Aliquam dapibus commodo nulla, nec tincidunt eros lacinia ut. Maecenas mi tellus, cursus at neque vitae, consectetur tempus eros.
+We can directly compare the low traffic seen on the 10th Wednesday, the 20th
+Wednesday, and Thanksgiving. As seen in Figure.
 
-Aenean maximus metus metus, in varius lorem ultrices in. Nulla a tortor tempus, facilisis orci in, viverra augue. Maecenas viverra mattis velit, et volutpat elit finibus eu. Curabitur eu diam sed justo malesuada fringilla. Fusce ac nisl nec diam aliquam lobortis. Fusce fermentum ligula dui, vel condimentum erat convallis vitae. Etiam finibus dolor et feugiat iaculis. Duis varius nulla non dictum rutrum. Curabitur aliquet turpis id turpis fringilla, laoreet interdum mauris dictum. Praesent id pharetra tortor, ac laoreet urna. Sed porta lacus non sagittis condimentum.
-Nuke Rochester.
-
-\noindent
-\section*{Cited Literature}
-
-\begin{thebibliography}{9}
-  \bibitem{HCM}
-    Transportation Research Board of the National Academies,
-    \emph{Highway Capacity Manual 2010}.
-    5th edition,
-    2010.
-\end{thebibliography}
-
-\end{document}
+\begin{figure}[h]
+\centering
