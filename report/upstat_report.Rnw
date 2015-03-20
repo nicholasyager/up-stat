@@ -30,7 +30,7 @@ There has been intense study in the area of traffic management since the mid-199
 
 The intersection, pictured in \ref{fig:intersection}, is part of an important byway between Bay Street and East Main Street. Zoning data provided by the city of Rochester shows us that the area surrounding this portion of Culver Road is mainly residential. However, there are designated commercial zones at both the intersections of Bay and East Main, and additional commercial lots in between both of these locations \cite{PropInfo}. These are mainly smaller business and not large scale commercial plazas similar to those in Henrietta or elsewhere in the city of Rochester. It is important to consider this information in conjunction with the results of our analyses when providing meaningful suggestions. 
 
-
+We also consider the Traffic Volume Map that is provided by the County of Monroe and the City of Rochester. Culver Road normally experiences a large amount of traffic that is comparable to East Main \cite{TrafficMap}. Furthermore, it appears as though the traffic continues down Culver and that there is no noticeable amount of traffic turning onto East Main that would contribute to any possible congestion. 
 
 \begin{figure}
         \centering
