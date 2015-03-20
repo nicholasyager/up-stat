@@ -7,6 +7,9 @@
 \usepackage{indentfirst}
 \usepackage{caption}
 \usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
 % \usepackage{natbib}
 
 \bibliographystyle{ieeetr}
@@ -23,7 +26,19 @@
 %rate (volume), the LOC classification, and some general information that is
 %useful to the DOT.
 
-There has been intense study in the area of traffic management
+There has been intense study in the area of traffic management since the mid-1990s. The ability to quantify and discern underlying patterns by use of a simple loop detector is a useful tool in understanding the complex nature of transportation systems. 
+
+\begin{figure}
+        \centering
+        \begin{subfigure}[b]{0.45\textwidth}
+                \includegraphics[width=\textwidth]{satellite_H.png}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.45\textwidth}
+                \includegraphics[width=\textwidth]{streetview.png}
+        \end{subfigure}
+        \caption{Pictured Left: satellite image of the intersection of Culver and East Main. Culver Road is highlighted in a light green. To the bottom right is East High School of the Rochester School District. Pictured Right: A streetview of Culver Road as it approaches East Main. Several businesses are located on both sides of the street. Location is approximate to where the loop detector is installed. Both images courtesy of Google Maps.}
+        \label{fig:intersection}
+\end{figure}
 
 \noindent
 \section*{Data Analysis}
@@ -506,9 +521,7 @@ This is then sorted for each time step, and a proportion is generated about how 
 \end{tabular}
 \end{table}
 
-Furthermore, each weekday has a particularly high probability of congestion between 5:00pm in the afternoon and 5:30pm. The results of the Bayesian analysis are shown in \ref{bayestable} for increased clarity. Interestingly enough, this is also when the road typically has the highest vehicular flow or volume. Because the area directly north of the intersection is mainly residential, it is hard to understand what is causing all of the volume and congestion.
-
-We could speculate that it is being used to circumvent other possibly congested roadways, however we lack the ability to determine that because we do not have the data.
+Furthermore, each weekday has a particularly high probability of congestion between 5:00pm in the afternoon and 5:30pm. The results of the Bayesian analysis are shown in \ref{bayestable} for increased clarity. Interestingly enough, this is also when the road typically has the highest vehicular flow or volume.
 
 \subsection*{Weather Analysis}
 Praesent iaculis pulvinar justo eu cursus. Mauris a ex eget sapien finibus commodo. Aenean et malesuada nunc. Nam iaculis porttitor faucibus. Etiam consequat rhoncus eros ut vehicula. Mauris vel ligula non nisl posuere aliquet. Mauris ac pulvinar metus, feugiat faucibus metus. Proin vel gravida tellus. Phasellus quis metus sollicitudin, volutpat massa nec, euismod risus. Nunc iaculis pellentesque purus non lobortis. Nam ac neque varius, auctor velit in, pretium elit. Ut facilisis, lacus nec mattis aliquet, nisi sapien vehicula massa, nec pharetra velit orci ac magna. Pellentesque vel velit ornare, aliquam turpis sed, egestas lacus. Aliquam dapibus commodo nulla, nec tincidunt eros lacinia ut. Maecenas mi tellus, cursus at neque vitae, consectetur tempus eros.
