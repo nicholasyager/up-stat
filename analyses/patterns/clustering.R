@@ -57,6 +57,7 @@ plot(cluster)
 matplot(t(days), type="l", col=cluster$clustering)
 
 classificationMatrix <- matrix(cluster$clustering, ncol=7, nrow=32, byrow=T)
+
 ggplot(melt(classificationMatrix), aes(Var1,Var2, fill=value)) +
   scale_fill_gradientn(colours=c("gray","orange","blue"),name="RMSD")+
   xlab("Day")+
@@ -64,7 +65,9 @@ ggplot(melt(classificationMatrix), aes(Var1,Var2, fill=value)) +
   geom_raster() +
   theme( panel.background = element_rect(fill = "transparent", colour = NA),
          panel.grid.minor = element_blank(),
-         panel.grid.major = element_blank())
+         panel.grid.major = element_blank())+
+  scale_x_discrete(breaks = seq(1, 32, 1), labels = seq(1,32,1))+
+  scale_y_discrete(breaks=c("1","2","3","4","5","6","7"), labels=dayList, limits=c(1,2,3,4,5,6,7))
 
 
 require("cluster")

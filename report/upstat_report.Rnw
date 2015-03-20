@@ -367,23 +367,26 @@ interest include the seventh Thursday, which corresponds with Thanksgiving, the
 \label{fig:correlation}
 \end{figure}
 
-We can directly compare the low traffic seen on the 10th Wednesday, the 20th
-Wednesday, and Thanksgiving. As seen in Figure.
+We can directly compare the low traffic seen on the 10th Wednesday
+(December 18, 2013), a typical Wednesday like October 16, 2013 and Thanksgiving.
+As seen in Figure \label{fig:wednesday}, the traffic pattern exhibited by December
+18, 2013 is very similar to that of Thanksgiving and not similar to a typical
+Wednesday.
 
 \begin{figure}[h]
 \centering
-<<echo=F, fig=TRUE>>=
+<<echo=F, fig=TRUE, height=3>>=
 par(mar=c(4.1,4.1,2.1,2.1))
 plot(volumeMatrices[[4]][1,], type="l",
      ylab="Traffic Volume (Vehicles/Hr.)",
      xlab="Hour",xaxt="n")
-lines(matrices[[4]][10,], col="blue")
-lines(matrices[[5]][7,], col="orange")
+lines(volumeMatrices[[4]][10,], col="blue")
+lines(volumeMatrices[[5]][7,], col="orange")
 legend("topleft", fill=c("black","blue","orange"),
-       legend=c("Example Weds.","10th Weds.","Thanksgiving"))
+       legend=c("Oct. 16, 2013","Dec. 18, 2013","Thanksgiving"))
 axis(1, seq(0,288,12), seq(0, 24, 1))
 @
-\caption{December 18th traffic is similar to Thanksgiving holiday traffic.}
+\caption{The traffic from December 18, 2013 is similar to Thanksgiving holiday traffic.}
 \label{fig:wednesday}
 \end{figure}
 
