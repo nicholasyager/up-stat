@@ -37,7 +37,7 @@ for (wday in 0:6) {
   }
   template <- apply(weeklyMatrix, 2, median, na.rm=T)
   for (week in 1:weeks) {
-    cors[week, wday+1] <- cor(template,weeklyMatrix[week,])
+    cors[week, wday+1] <- cor(template,weeklyMatrix[week,], use="na.or.complete")
   }
   matrices <- c(matrices, list(weeklyMatrix))
   templates <- c(templates, list(template))
@@ -51,6 +51,8 @@ legend("topleft",legend=dayList,fill=rainbow(7),
 
 ## Plotting --------------------------------------------------------------------
 
+cors[6, 1] <- NA
+
 require(ggplot2)
 require(reshape2)
 ggplot(melt(cors), aes(Var1,Var2, fill=value)) +
@@ -61,7 +63,7 @@ ggplot(melt(cors), aes(Var1,Var2, fill=value)) +
   theme( panel.background = element_rect(fill = "transparent", colour = NA),
          panel.grid.minor = element_blank(),
          panel.grid.major = element_blank()) +
-  scale_x_discrete(breaks = seq(1, 31, 1), labels = seq(2,32,1))+
+  scale_x_discrete(breaks = seq(1, 32, 1), labels = seq(1,32,1))+
   scale_y_discrete(breaks=c("1","2","3","4","5","6","7"), labels=dayList, limits=c(1,2,3,4,5,6,7))
 
 ## Plot the abnormailties ------------------------------------------------------

@@ -26,6 +26,12 @@ dayToIndices <- function(day) {
 traffic <- read.csv("UrbanAnalytics2015.csv", sep=" ")
 traffic$DateTime <- strptime(traffic$DateTime, "%m/%d/%y %H:%M")
 
+bp <- boxplot(traffic[1:4])
+# Remove Outliers
+for (col in 1:4) {
+  traffic[which(traffic[,col] >= bp$stats[5,col]),col] <- NA
+}
+
 # Time-based filtering ---------------------------------------------------------
 stepsPerDay <- 1440/5
 days <- 31
@@ -67,16 +73,26 @@ for (week in 1:32) {
         totalTraffic <- sum(matrices[[wday]][week,],na.rm=T)/12
         weekData[wday] <- totalTraffic
     }
-    results[week,1] <- sum(weekData, na.rm=T)
+    results[week,1] <- median(weekData, na.rm=T)
 }
-plot(results[1:nrow(results),],
-     ylab="Weekly Traffic",
-     xlab="Week")
 
-# Regress regress! -------------------------------------------------------------
+# Remove holidays
+holidays <- matrix(0, ncol=2, nrow=2)
+holidays[1,] <- c(10, results[10])
+holidays[2,] <- c(7, results[7])
+results[c(10, 7)] <- NA
+
+# Plot
+plot(results[1:nrow(results),],
+     ylab="Median Daily Traffic",
+     xlab="Week", ylim=c(3000, 6000))
+points(holidays, pch="X")
+
+# Regress regress! -
 week <- 1:32
 trafficVolume <- results[1:32,]
 model <- lm(trafficVolume~week)
+summary(model)
 abline(model, col="red")
 
 cat(paste("The traffic volume is growing at",model$coefficients[2],"vehicles per week."))
@@ -107,7 +123,7 @@ for (wday in 0:6) {
 
 
 # Total traffic for each day ---------------------------------------------------
-results <- matrix(0, nrow=32)
+delayResults <- matrix(0, nrow=32)
 for (week in 1:32) {
     weekData <- numeric(7)
     for(wday in 1:7){
@@ -115,16 +131,26 @@ for (week in 1:32) {
         totalTraffic <- median(matrices[[wday]][week,],na.rm=T)
         weekData[wday] <- totalTraffic
     }
-    results[week,1] <- median(weekData, na.rm=T)
+    delayResults[week,1] <- median(weekData, na.rm=T)
 }
-plot(results[1:nrow(results),],
-     ylab="Weekly Median Traffic Delay (Seconds)",
-     xlab="Week")
+
+# Remove holidays
+holidays <- matrix(0, ncol=2, nrow=2)
+holidays[1,] <- c(10, delayResults[10])
+holidays[2,] <- c(7, delayResults[7])
+delayResults[c(10, 7)] <- NA
+
+# Plot
+plot(delayResults[1:nrow(delayResults),],
+     ylab="Median Traffic Delay (Seconds)",
+     xlab="Week", ylim=c(65, 130))
+points(holidays, pch="X")
 
 # Regress regress! -------------------------------------------------------------
 week <- 1:32
-trafficVolume <- results[1:32,]
-model <- lm(trafficVolume~week)
+trafficDelay <- delayResults[1:32,]
+model <- lm(trafficDelay~week)
 abline(model, col="red")
+summary(model)
 
 cat(paste("The delay time is increasing at",model$coefficients[2],"seconds per week."))
