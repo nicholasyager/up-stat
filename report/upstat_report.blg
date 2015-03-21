@@ -3,10 +3,12 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: upstat_report.aux
 The style file: ieeetr.bst
 I found no \bibdata command---while reading file upstat_report.aux
+Warning--I didn't find a database entry for "PropInfo"
+Warning--I didn't find a database entry for "TrafficMap"
 Warning--I didn't find a database entry for "HCM"
 You've used 0 entries,
             1876 wiz_defined-function locations,
-            478 strings with 3482 characters,
+            482 strings with 3518 characters,
 and the built_in function-call counts, 20 in all, are:
 = -- 0
 > -- 0

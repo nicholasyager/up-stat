@@ -26,13 +26,13 @@
 %rate (volume), the LOC classification, and some general information that is
 %useful to the DOT.
 
-There has been intense study in the area of traffic management since the mid-1990s. The ability to quantify and discern underlying patterns by use of a simple loop detector is a useful tool in understanding the complex nature of transportation systems. We were tasked with identifying unique trends in the data and to provide sound recommendations to improve traffic conditions for the intersection of Culver Road and East Main Street in Rochester, New York. The data, obtained from a loop detector approximately 200 feet away from intersection in the southbound lane, has nearly eight months of data stretching from October of 2013 to June of 2014. The loop detector transmits data in five minute intervals, and calculates pertinent metrics such as estimated hourly volume, number of cars approaching a red light, delay, and others. 
+There has been intense study in the area of traffic management since the mid-1990s. The ability to quantify and discern underlying patterns by use of a simple loop detector is a useful tool in understanding the complex nature of transportation systems. We were tasked with identifying unique trends in the data and to provide sound recommendations to improve traffic conditions for the intersection of Culver Road and East Main Street in Rochester, New York. The data, obtained from a loop detector approximately 200 feet away from intersection in the southbound lane, has nearly eight months of data stretching from October of 2013 to June of 2014. The loop detector transmits data in five minute intervals, and calculates pertinent metrics such as estimated hourly volume, number of cars approaching a red light, delay, and others.
 
-The intersection, pictured in \ref{fig:intersection}, is part of an important byway between Bay Street and East Main Street. Zoning data provided by the city of Rochester shows us that the area surrounding this portion of Culver Road is mainly residential. However, there are designated commercial zones at both the intersections of Bay and East Main, and additional commercial lots in between both of these locations \cite{PropInfo}. These are mainly smaller business and not large scale commercial plazas similar to those in Henrietta or elsewhere in the city of Rochester. It is important to consider this information in conjunction with the results of our analyses when providing meaningful suggestions. 
+The intersection, pictured in \ref{fig:intersection}, is part of an important byway between Bay Street and East Main Street. Zoning data provided by the city of Rochester shows us that the area surrounding this portion of Culver Road is mainly residential. However, there are designated commercial zones at both the intersections of Bay and East Main, and additional commercial lots in between both of these locations \cite{PropInfo}. These are mainly smaller business and not large scale commercial plazas similar to those in Henrietta or elsewhere in the city of Rochester. It is important to consider this information in conjunction with the results of our analyses when providing meaningful suggestions.
 
-We also consider the Traffic Volume Map that is provided by the County of Monroe and the City of Rochester. Culver Road normally experiences a large amount of traffic that is comparable to East Main \cite{TrafficMap}. Furthermore, it appears as though the traffic continues down Culver and that there is no noticeable amount of traffic turning onto East Main that would contribute to any possible congestion. 
+We also consider the Traffic Volume Map that is provided by the County of Monroe and the City of Rochester. Culver Road normally experiences a large amount of traffic that is comparable to East Main \cite{TrafficMap}. Furthermore, it appears as though the traffic continues down Culver and that there is no noticeable amount of traffic turning onto East Main that would contribute to any possible congestion.
 
-\begin{figure}
+\begin{figure}[H]
         \centering
         \begin{subfigure}[b]{0.45\textwidth}
                 \includegraphics[width=\textwidth]{satellite_H.png}
@@ -58,7 +58,7 @@ conditions present.
 # Libraries!
 rm(list=ls())
 par(mfrow=c(1,1))
-packages <- c('ggplot2','reshape2','knitr')
+packages <- c('ggplot2','reshape2','cluster')
 for (index in 1:length(packages)){
   package = packages[index]
   exists = require(package,character.only = T)
@@ -148,7 +148,7 @@ barplot(LOS,
         col="gray20")
 abline(h=0)
 @
-\caption{\leftskip0.25in\rightskip0.25in The Culver Road/East Main Street
+\caption{The Culver Road/East Main Street
 intersection has a poor Level of Service. The histogram on the left shows the
 distribution of the average vehicle control delay for each observation. The
 distribution is bimodal with peaks at zero seconds and 140 seconds. The median
@@ -198,7 +198,7 @@ abline(congestedVelocityModel,col="blue",lwd=2)
 criticalDensity = (congestedVelocityModel$coefficients[1])/(freeVelocityModel$coefficients[1] - congestedVelocityModel$coefficients[2])
 abline(v=criticalDensity, col="green",lwd=2)
 @
-\caption{\leftskip0.25in\rightskip0.25inFundamental diagram of traffic flow provides
+\caption{Fundamental diagram of traffic flow provides
 free flow and traffic wave velocities. Traffic density was calculated by
 dividing the traffic volume by the traffic speed. Using linear regression, we
 found the free flow velocity (19.5 mph) as depicted in red, the traffic wave
@@ -208,7 +208,7 @@ per mile) as depicted in green.}
 \end{figure}
 
 
-\subsection*{Trend and Pattern Analysis}
+\subsection*{Trend Analysis}
 
 To examine the general trend in the metrics we were provided, we performed linear
 and multivariate regression. These techniques allows us to approximate the traffic
@@ -338,7 +338,7 @@ volumeSummary<- summary(volumeModel)
 abline(volumeModel, col="red")
 par(mfrow=c(1,1), mar=c(5.1,4.1,4.1,2.1))
 @
-\caption{\leftskip0.25in\rightskip0.25in The median traffic delay and median weekly
+\caption{The median traffic delay and median weekly
 traffic volume are increasing over time. A linear regression of the median
 traffic delay for each week suggests that the traffic delay may be increasing
 \Sexpr{round(delayModel$coefficients[2],2)} seconds per week
@@ -350,16 +350,106 @@ per week ($R^2 = \Sexpr{round(volumeSummary$r.squared, 2)}$).}
 \label{trends}
 \end{figure}
 
-We can also use the recorded vehicle volumes for each day to detect traffic
-abnormailties as a means of locating interesting traffic patterns. To perform this
-analysis we constructed template days of the week, seven traffic time series that
-are the median traffic volume for every 5 minute interval. We then calculated the
-correlation between the weekday template and the day of interest for each day in
-our data set. A plot of each day's correlation, as shown in Figure \ref{fig:correlation},
-outlines the variablity in each day's traffic patterns. An apt example of abnormal
-driving is the seventh Thursday of the data set, which corresponds to Thanksgiving.
-The 2013 Thanksgiving traffic was abnormally low for a Thursday. Similarly, the
-10th and 20th Wednesdays of the data set exhibit similar patterns of minimal traffic..
+\subsection*{Pattern Analyses}
+
+A secondary way of understanding the traffic passing though the Culver Road and
+East Main Street intersection is to assess the prevailing patterns of traffic.
+Two methods of analyzing traffic patrerns are clustering and correlation analysis.
+Clustering algorithims give us an opportunity to treat each day's traffic like
+a single data point. By comparing the distance between each day's traffic, we can
+group similar traffic patterns together. Correlation analyses, on the other hand,
+examine how similar each individual pairing of days is by comparing each traffic
+observation together. These two different techniques provide different ways of
+finding patterns: clustering allows us to find similar large-scale similarities
+between days, whereas correlations gives a more granular measure of similarity
+between a day and the expected traffic.
+
+Using a CLARA clustering algorithim, we clustered the daily traffic volume
+for each day of data using 10-minute intervals. We found that there are three
+primary types of traffic: weekday traffic, Saturday traffic, and Sunday traffic.
+Each of these types in named after the days in which they are most likely to
+occur. Figure \ref{fig:clustering}A, shows a cluster plot of the three clusters
+of traffic measured along their principle components. The circles represent
+traffic classified as Sunday traffic, the triangles are weekday traffic, and
+the pluses are Satuday traffic. It should be noted that the most variable traffic
+yupe is the Sunday classification, suggesting that there may be incidences of
+highly irregular traffic that are more similar to Sundays than any other day
+of the week. A notable example of this is Thanksgiving Thursday on November 28,
+2013. Thanksgiving experiences durastically lower traffic than both the typical
+Sunday and the typical Thursday, but the low traffic volume is more similar to
+a Sunday so it was clustered accordingly, as shown in Figure \ref{fig:clustering}B.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.45\textwidth}
+\centering
+A\\
+<<clustering, echo=FALSE, fig=TRUE>>=
+# Data aggregation
+allDays <- matrix(NA, ncol=288, nrow=32*7)
+dayIndex = 1
+for (week in 1:32) {
+  for (wday in 1:7) {
+    allDays[dayIndex,] <- volumeMatrices[[wday]][week,]
+    dayIndex = dayIndex + 1
+  }
+}
+# Examine only hourly rates
+days <- allDays[,seq(1,288,2)]
+#install.packages("cluster")
+library("cluster")
+cluster <- clara(days, k=3, samples=100)
+par(mar=c(4.1,4.1,2.1,2.1))
+clusplot(cluster, main="",col.p=c("gray","orange","blue")[cluster$clustering])
+@
+\end{subfigure}
+\begin{subfigure}[b]{0.45\textwidth}
+\centering
+B\\
+<<echo=FALSE, fig=TRUE, results=hide>>=
+library(ggplot2)
+library(reshape2)
+classificationMatrix <- matrix(cluster$clustering, ncol=7, nrow=32, byrow=T)
+dayList<-c("Sun.","Mon.","Tues.","Wed.","Thurs.","Fri.","Sat.")
+ggplot(melt(classificationMatrix), aes(Var1,Var2, fill=value)) +
+  scale_fill_gradientn(colours=c("gray","orange","blue"),name="Classification",
+                       guide="legend",breaks=c(1,2,3),
+                       labels=c("Sunday","Weekday","Saturday"))+
+  xlab("Day")+
+  ylab("Day")+
+  geom_raster() +
+  theme( panel.background = element_rect(fill = "transparent", colour = NA),
+         panel.grid.minor = element_blank(),
+         panel.grid.major = element_blank(),
+         axis.text.x = element_text(size=7),
+         legend.position = 'bottom')+
+  scale_x_discrete(breaks = seq(1, 32, 1), labels = seq(1,32,1))+
+  scale_y_discrete(breaks=c("1","2","3","4","5","6","7"), labels=dayList, limits=c(1,2,3,4,5,6,7))
+
+@
+\end{subfigure}
+\caption{CLARA clustering suggests three primary traffic types.}
+\label{fig:clustering}
+\end{figure}
+
+
+For our correlation analysies we compared each day's traffic volume to the median
+traffic for that day of the week. For example, we examined the correlation between
+the traffic volume for Thanksgiving to the median traffic volume at each 5-minute
+interval for all Thusdays. A plot of each day's correlation, as shown in Figure \ref{fig:correlation},
+outlines the variablity in each day's traffic patterns. It should be noted that
+the days of abnormally low correlation relate to weekdays clustered as Sunday
+traffic in Figure \ref{fig:clustering}B. In this figure high correlation suggests that
+the day's traffic is very similar to the expected traffic for that day of the week,
+whereas a low correlation is indicative of an abnormality in traffic volume.
+One interesting case of abnormal traffic is the seventh Thursday of the data set,
+which corresponds to Thanksgiving. The 2013 Thanksgiving traffic was abnormally
+low for a Thursday. Similarly, the 10th and 20th Wednesdays of the data set
+exhibit similar patterns of minimal traffic. Interestingly, weekdays have a higher
+median correlation (\Sexpr{round(mean(apply(cors, 2, median)[2:6]),3)}) and a lower
+variance in correlation (\Sexpr{round(mean(apply(cors, 2, var)[2:6]),3)}) than the weekends. This
+suggests that weekdays have a relatively stable or predictable traffic pattern
+with a few dramatic exceptions.
 
 \begin{figure}[h]
 \centering
@@ -387,32 +477,23 @@ interest include the seventh Thursday, which corresponds with Thanksgiving, the
 \label{fig:correlation}
 \end{figure}
 
-We can directly compare the low traffic seen on the 10th Wednesday
-(December 18, 2013), a typical Wednesday like October 16, 2013 and Thanksgiving.
-As seen in Figure \label{fig:wednesday}, the traffic pattern exhibited by December
-18, 2013 is very similar to that of Thanksgiving and not similar to a typical
-Wednesday.
-
-\begin{figure}[H]
-\centering
-<<echo=F, fig=TRUE, height=3>>=
-par(mar=c(4.1,4.1,2.1,2.1))
-plot(volumeMatrices[[4]][1,], type="l",
-     ylab="Traffic Volume (Vehicles/Hr.)",
-     xlab="Hour",xaxt="n")
-lines(volumeMatrices[[4]][10,], col="blue")
-lines(volumeMatrices[[5]][7,], col="orange")
-legend("topleft", fill=c("black","blue","orange"),
-       legend=c("Oct. 16, 2013","Dec. 18, 2013","Thanksgiving"))
-axis(1, seq(0,288,12), seq(0, 24, 1))
-@
-\caption{The traffic from December 18, 2013 is similar to Thanksgiving holiday traffic.}
-\label{fig:wednesday}
-\end{figure}
 
 \subsection*{Bayesian Analysis}
 
-\begin{figure}[H] \label{fig:bayesplot}
+In order to determine how the probability of congestion relates to the time of day we adapted Bayes' Theorum for use with the data provided. Because the traffic on the weekend is not as intense as the traffic during the weekdays, the decision was made to evaluate each day independently of one another so as not to induce any sort of bias into the results. Congestion was determined simply by using the critical density of the intersection, identified as 42.8 Vehicles per Mile. Any situation where the density is equal to or greater than this measure is determined to be 'congested.' Any situation below this measure is simply 'not congested.'
+
+This is then sorted for each time step, and a proportion is generated about how many times (on a specific day of the week) that particular time is considered congested. For example, this means that if 2 out of the 10 observations at 2:10am on Wednesdays is considered to be congested, equal or exceeding the critical density, the proportion is calculated to be 0.2. This is then multiplied by the probability of congestion at any time amongst all the observations, and is then divided by the probability of randomly selecting that time from the dataset.
+
+Figure \ref{fig:bayesplot} provides a way of seeing the probability of congestion
+occuring given the day of the week and the time of day. As expected the probability
+of congestion increases dramatically between 4 and 6 PM, which correspond with the
+traditional rush hour period. Interestingly, there is a non-trivial probability of
+traffic congestion occuring between 2 and 6 AM. This may correspond with people
+who work during the evening. Additionally, there is a slight spike at 7 AM, which
+may correspond with school traffic or people leaving for jobs with 7:20 or 8 AM
+starting times.
+
+\begin{figure}[h] \label{fig:bayesplot}
 \centering
 <<bayesplot,echo=FALSE, fig=TRUE, height=4>>=
 # Load Data
@@ -486,8 +567,7 @@ probmat = probfunc(probmat,saturday,8,pCongest)
 # Bayesian Probs
 plot(probmat[,2],type="l",axes=F,ylim=c(0,1),col="chartreuse3",
      ylab = "p(C|T)",
-     xlab = "Time (Hours)",
-     main = "Probability of Congestion Given Time"
+     xlab = "Time (Hours)"
      )
 axis(1,at=seq(0,288,by=24),lab=seq(0,24,by=2),las=2)
 axis(2,at=seq(0,1,by=0.1),lab=seq(0,1,by=0.1),las=1)
@@ -503,16 +583,16 @@ legend("topright",
        cex=0.9,pch=15,title="Day")
 text(x = 208,y = 0.9117647, labels = "0.912",cex = 0.8, pos=3)
 @
-\caption{\leftskip0.25in\rightskip0.25in Probability of observing congestion based on specific times throughout the day (represented as p(C|T)). All days are represented as separate lines. A maximum probability of 91.2\% is shown on the graph and occurs at 5:15pm on Friday. Most weekdays have the highest probability of congestion between 5:00pm and 5:25pm, or during evening rush hour.}
+\caption{Probability of observing congestion based on specific times throughout the day (represented as p(C|T)). All days are represented as separate lines. A maximum probability of 91.2\% is shown on the graph and occurs at 5:15pm on Friday. Most weekdays have the highest probability of congestion between 5:00pm and 5:25pm, or during evening rush hour.}
 \end{figure}
 
-In order to determine how the probability of congestion relates to the time of day we adapted Bayes' Theorum for use with the data provided. Because the traffic on the weekend is not as intense as the traffic during the weekdays, the decision was made to evaluate each day independently of one another so as not to induce any sort of bias into the results. Congestion was determined simply by using the critical density of the intersection, identified as 42.8 Vehicles per Mile. Any situation where the density is equal to or greater than this measure is determined to be 'congested.' Any situation below this measure is simply 'not congested.'
-
-This is then sorted for each time step, and a proportion is generated about how many times (on a specific day of the week) that particular time is considered congested. For example, this means that if 2 out of the 10 observations at 2:10am on Wednesdays is considered to be congested, equal or exceeding the critical density, the proportion is calculated to be 0.2. This is then multiplied by the probability of congestion at any time amongst all the observations, and is then divided by the probability of randomly selecting that time from the dataset. The results for each day are shown in \ref{fig:bayesplot}.
+Table \label{basestable} presents times that have he highest probability of observing traffic congestion. For the purposes of this table Saturday and Sunday were omitted from the table due to the fact that their relative probabilities were approximately zero. A point of interest
+is that congested periods start earlier on Fridays, suggesting that people may
+be leaving work early on Fridays.
 
 \begin{table}[h] \label{bayestable}
 \centering
-\caption{Selected results from Bayesian analysis of traffic data. These times represent the highest probability of observing traffic congestion. Saturday and Sunday were omitted from the table due to the fact that their relative probabilities were approximately zero.}
+\caption{Selected results from Bayesian analysis of traffic data.}
 \begin{tabular}{l|l
 >{\columncolor[HTML]{EFEFEF}}l l
 >{\columncolor[HTML]{EFEFEF}}l l}
@@ -524,8 +604,6 @@ This is then sorted for each time step, and a proportion is generated about how 
 17:25         & 0.588        & 0.794                        & 0.647        & 0.677         & 0.529
 \end{tabular}
 \end{table}
-
-Furthermore, each weekday has a particularly high probability of congestion between 5:00pm in the afternoon and 5:30pm. The results of the Bayesian analysis are shown in \ref{bayestable} for increased clarity. Interestingly enough, this is also when the road typically has the highest vehicular flow or volume.
 
 \subsection*{Weather Analysis}
 Praesent iaculis pulvinar justo eu cursus. Mauris a ex eget sapien finibus commodo. Aenean et malesuada nunc. Nam iaculis porttitor faucibus. Etiam consequat rhoncus eros ut vehicula. Mauris vel ligula non nisl posuere aliquet. Mauris ac pulvinar metus, feugiat faucibus metus. Proin vel gravida tellus. Phasellus quis metus sollicitudin, volutpat massa nec, euismod risus. Nunc iaculis pellentesque purus non lobortis. Nam ac neque varius, auctor velit in, pretium elit. Ut facilisis, lacus nec mattis aliquet, nisi sapien vehicula massa, nec pharetra velit orci ac magna. Pellentesque vel velit ornare, aliquam turpis sed, egestas lacus. Aliquam dapibus commodo nulla, nec tincidunt eros lacinia ut. Maecenas mi tellus, cursus at neque vitae, consectetur tempus eros.
